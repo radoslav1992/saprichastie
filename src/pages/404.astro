@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { useTranslations } from '../i18n';
+
+const t = useTranslations('bg');
+const tEn = useTranslations('en');
+---
+
+<Base lang="bg" path="/" title={t.notFound.title}>
+  <section class="section">
+    <div class="container notfound">
+      <p class="code" aria-hidden="true">404</p>
+      <h1>{t.notFound.title}</h1>
+      <p lang="en" class="en-line">{tEn.notFound.title}</p>
+      <p>{t.notFound.text}</p>
+      <div class="actions">
+        <a href="/" class="btn btn-primary">
+          {t.notFound.backHome}
+          <Icon name="arrowRight" class="btn-icon" />
+        </a>
+        <a href="/en/" class="btn btn-outline" lang="en">{tEn.notFound.backHome}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    text-align: center;
+    max-width: 36rem;
+    padding-block: 3rem;
+  }
+
+  .code {
+    font-size: clamp(4rem, 12vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--c-primary-soft);
+    -webkit-text-stroke: 2px var(--c-primary);
+    margin-bottom: 0.2em;
+  }
+
+  .en-line {
+    color: var(--c-text-muted);
+    font-weight: 650;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.6rem;
+  }
+</style>

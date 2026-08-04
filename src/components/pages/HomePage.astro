@@ -1,0 +1,403 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../../i18n';
+import { galleryImages } from '../../data/gallery';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const url = (path: string) => localizeUrl(lang, path);
+
+const services = [
+  { icon: 'heart', title: t.services.supportTitle, text: t.services.supportText },
+  { icon: 'computer', title: t.services.computerTitle, text: t.services.computerText },
+  { icon: 'compass', title: t.services.orientationTitle, text: t.services.orientationText },
+  { icon: 'book', title: t.services.trainingTitle, text: t.services.trainingText },
+  { icon: 'ball', title: t.services.sportsTitle, text: t.services.sportsText },
+  { icon: 'scale', title: t.services.legalTitle, text: t.services.legalText },
+] as const;
+
+const galleryTeaser = galleryImages.slice(0, 4);
+---
+
+<Base lang={lang} path="/">
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">{t.siteName}</p>
+        <h1 id="hero-title">{t.home.heroTitle}</h1>
+        <p class="hero-sub">{t.home.heroSubtitle}</p>
+        <div class="hero-actions">
+          <a href={url('/services')} class="btn btn-primary">
+            {t.home.heroCtaServices}
+            <Icon name="arrowRight" class="btn-icon" />
+          </a>
+          <a href={url('/contact')} class="btn btn-outline">{t.home.heroCtaContact}</a>
+        </div>
+      </div>
+
+      <div class="hero-collage" aria-hidden="true">
+        <img
+          src="/images/gallery/white-cane-street.jpg"
+          alt=""
+          width="1080"
+          height="810"
+          class="collage-main"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <img
+          src="/images/gallery/braille-training-children.jpg"
+          alt=""
+          width="1080"
+          height="810"
+          class="collage-small collage-a"
+          loading="lazy"
+        />
+        <img
+          src="/images/gallery/showdown-sport.jpg"
+          alt=""
+          width="960"
+          height="720"
+          class="collage-small collage-b"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="section" aria-label={t.home.welcome}>
+    <div class="container">
+      <p class="welcome-line">{t.home.welcome}</p>
+      <div class="grid-3">
+        <div class="card pillar">
+          <span class="icon-badge"><Icon name="hands" /></span>
+          <h2 class="pillar-title">{t.home.pillar1Title}</h2>
+          <p>{t.home.pillar1Text}</p>
+        </div>
+        <div class="card pillar">
+          <span class="icon-badge"><Icon name="book" /></span>
+          <h2 class="pillar-title">{t.home.pillar2Title}</h2>
+          <p>{t.home.pillar2Text}</p>
+        </div>
+        <div class="card pillar">
+          <span class="icon-badge"><Icon name="users" /></span>
+          <h2 class="pillar-title">{t.home.pillar3Title}</h2>
+          <p>{t.home.pillar3Text}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About teaser -->
+  <section class="section section-alt" aria-labelledby="about-teaser-title">
+    <div class="container about-teaser">
+      <div class="about-photo">
+        <img
+          src="/images/gallery/community-meeting-2.jpg"
+          alt={galleryImages.find((i) => i.src.includes('community-meeting-2'))?.alt[lang]}
+          width="1080"
+          height="810"
+          loading="lazy"
+        />
+      </div>
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">{t.nav.about}</span>
+          <h2 id="about-teaser-title">{t.home.aboutTeaserTitle}</h2>
+          <p>{t.home.aboutTeaserText}</p>
+        </div>
+        <a href={url('/about')} class="btn btn-primary">
+          {t.home.aboutTeaserCta}
+          <Icon name="arrowRight" class="btn-icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{t.nav.services}</span>
+        <h2 id="services-title">{t.home.servicesTitle}</h2>
+        <p>{t.home.servicesSubtitle}</p>
+      </div>
+      <div class="grid-3">
+        {
+          services.map((s) => (
+            <div class="card">
+              <span class="icon-badge">
+                <Icon name={s.icon} />
+              </span>
+              <h3>{s.title}</h3>
+              <p class="card-text">{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="section-cta">
+        <a href={url('/services')} class="btn btn-outline">
+          {t.home.servicesCta}
+          <Icon name="arrowRight" class="btn-icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission band -->
+  <section class="mission-band" aria-labelledby="mission-title">
+    <div class="container">
+      <h2 id="mission-title">{t.home.missionTitle}</h2>
+      <p>{t.home.missionStatement}</p>
+    </div>
+  </section>
+
+  <!-- Gallery teaser -->
+  <section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{t.nav.gallery}</span>
+        <h2 id="gallery-title">{t.home.galleryTitle}</h2>
+        <p>{t.home.gallerySubtitle}</p>
+      </div>
+      <div class="grid-4 gallery-teaser">
+        {
+          galleryTeaser.map((img) => (
+            <a href={url('/gallery')} class="teaser-item" aria-label={img.alt[lang]}>
+              <img src={img.src} alt={img.alt[lang]} width={img.width} height={img.height} loading="lazy" />
+            </a>
+          ))
+        }
+      </div>
+      <div class="section-cta">
+        <a href={url('/gallery')} class="btn btn-primary">
+          <Icon name="images" class="btn-icon" />
+          {t.home.galleryCta}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="section" aria-labelledby="contact-cta-title">
+    <div class="container">
+      <div class="contact-cta">
+        <div>
+          <h2 id="contact-cta-title">{t.home.contactCtaTitle}</h2>
+          <p>{t.home.contactCtaText}</p>
+        </div>
+        <a href={url('/contact')} class="btn btn-accent">
+          {t.home.contactCtaButton}
+          <Icon name="arrowRight" class="btn-icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  :global(.btn-icon) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(46rem 30rem at 110% -10%, color-mix(in srgb, var(--c-accent) 16%, transparent), transparent),
+      linear-gradient(160deg, var(--c-primary-soft), var(--c-bg) 62%);
+    border-bottom: 1px solid var(--c-border);
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 2.6rem;
+    align-items: center;
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+  }
+
+  .hero-eyebrow {
+    font-weight: 750;
+    color: var(--c-primary);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.9rem;
+  }
+
+  .hero-sub {
+    font-size: 1.22rem;
+    color: var(--c-text-muted);
+    max-width: 34rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .hero-collage {
+    position: relative;
+    min-height: 20rem;
+  }
+
+  .collage-main {
+    width: 88%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 4px solid var(--c-surface);
+  }
+
+  .collage-small {
+    position: absolute;
+    width: 44%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 4px solid var(--c-surface);
+  }
+
+  .collage-a {
+    right: 0;
+    top: -1.4rem;
+    transform: rotate(2.5deg);
+  }
+
+  .collage-b {
+    right: 6%;
+    bottom: -1.6rem;
+    transform: rotate(-2deg);
+  }
+
+  @media (max-width: 899px) {
+    .hero-collage {
+      min-height: 0;
+      padding-bottom: 2.4rem;
+    }
+  }
+
+  /* Pillars */
+  .welcome-line {
+    font-size: 1.15rem;
+    font-weight: 650;
+    color: var(--c-primary-strong);
+    max-width: 44rem;
+    margin-bottom: 2rem;
+  }
+
+  :global(html[data-contrast='high']) .welcome-line {
+    color: var(--c-text);
+  }
+
+  .pillar-title {
+    font-size: 1.3rem;
+  }
+
+  .card-text {
+    color: var(--c-text-muted);
+    margin-bottom: 0;
+  }
+
+  /* About teaser */
+  .about-teaser {
+    display: grid;
+    gap: 2.4rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .about-teaser {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+
+  .about-photo img {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .section-cta {
+    margin-top: 2.2rem;
+  }
+
+  /* Mission band */
+  .mission-band {
+    background: linear-gradient(135deg, var(--c-primary-strong), var(--c-primary));
+    color: var(--c-on-primary);
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  :global(html[data-contrast='high']) .mission-band {
+    background: var(--c-surface);
+    color: var(--c-text);
+    border-block: 2px solid var(--c-border);
+  }
+
+  .mission-band h2 {
+    color: inherit;
+  }
+
+  .mission-band p {
+    max-width: 52rem;
+    font-size: 1.18rem;
+    margin-bottom: 0;
+    opacity: 0.96;
+  }
+
+  /* Gallery teaser */
+  .gallery-teaser .teaser-item {
+    display: block;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .gallery-teaser img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+    transition: transform 0.25s ease;
+  }
+
+  .gallery-teaser .teaser-item:hover img {
+    transform: scale(1.04);
+  }
+
+  /* Contact CTA */
+  .contact-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-left: 6px solid var(--c-accent);
+    border-radius: var(--radius-lg);
+    padding: 2.2rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .contact-cta h2 {
+    margin-bottom: 0.3em;
+  }
+
+  .contact-cta p {
+    margin: 0;
+    color: var(--c-text-muted);
+    max-width: 34rem;
+  }
+</style>

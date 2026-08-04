@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saprichastie",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  // Contact form configuration.
+  //
+  // CONTACT_SENDER  – the "from" address. Must belong to a domain in your
+  //                   Cloudflare account with Email Routing enabled.
+  // CONTACT_RECIPIENT – where contact form submissions are delivered. Must be
+  //                   a verified destination address in Email Routing (or an
+  //                   address on your Email-Routing-enabled domain that
+  //                   forwards to one).
+  "vars": {
+    "CONTACT_SENDER": "contact@saprichastie.org",
+    "CONTACT_RECIPIENT": "info@saprichastie.org"
+  },
+  // Send Email binding used by /api/contact.
+  // Optionally lock it down with "destination_address" or
+  // "allowed_destination_addresses" so the Worker can only email you.
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL"
+    }
+  ]
+}

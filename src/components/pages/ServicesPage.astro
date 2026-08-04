@@ -1,0 +1,201 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const mainServices = [
+  {
+    id: 'center',
+    icon: 'hands',
+    title: t.services.centerTitle,
+    text: t.services.centerText,
+    offers: t.services.centerOffers,
+    items: t.services.centerItems,
+  },
+  {
+    id: 'support',
+    icon: 'heart',
+    title: t.services.supportTitle,
+    text: t.services.supportText,
+    offers: t.services.supportOffers,
+    items: t.services.supportItems,
+  },
+  {
+    id: 'training',
+    icon: 'book',
+    title: t.services.trainingTitle,
+    text: t.services.trainingText,
+    offers: t.services.trainingOffers,
+    items: t.services.trainingItems,
+  },
+] as const;
+
+const moreServices = [
+  { icon: 'computer', title: t.services.computerTitle, text: t.services.computerText },
+  { icon: 'compass', title: t.services.orientationTitle, text: t.services.orientationText },
+  { icon: 'ball', title: t.services.sportsTitle, text: t.services.sportsText },
+  { icon: 'scale', title: t.services.legalTitle, text: t.services.legalText },
+] as const;
+---
+
+<Base lang={lang} path="/services" title={t.services.title} description={t.services.intro}>
+  <PageHeader title={t.services.title} intro={t.services.intro} />
+
+  <section class="section" aria-label={t.services.title}>
+    <div class="container service-list">
+      {
+        mainServices.map((s) => (
+          <article class="card service-card" id={s.id} aria-labelledby={`${s.id}-title`}>
+            <div class="service-head">
+              <span class="icon-badge">
+                <Icon name={s.icon} />
+              </span>
+              <h2 id={`${s.id}-title`}>{s.title}</h2>
+            </div>
+            <p class="service-text">{s.text}</p>
+            <h3 class="offers-title">{s.offers}</h3>
+            <ul class="checklist">
+              {s.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-label={t.home.servicesTitle}>
+    <div class="container">
+      <div class="grid-2">
+        {
+          moreServices.map((s) => (
+            <div class="card">
+              <span class="icon-badge">
+                <Icon name={s.icon} />
+              </span>
+              <h2 class="more-title">{s.title}</h2>
+              <p class="service-text mb-0">{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="eligibility-title">
+    <div class="container">
+      <div class="card eligibility">
+        <h2 id="eligibility-title">{t.services.eligibilityTitle}</h2>
+        <p>{t.services.eligibilityText}</p>
+        <p class="mb-0">{t.services.fundingText}</p>
+      </div>
+
+      <div class="need-help">
+        <div>
+          <h2>{t.services.needHelpTitle}</h2>
+          <p>{t.services.needHelpText}</p>
+        </div>
+        <a href={localizeUrl(lang, '/contact')} class="btn btn-accent">
+          {t.services.contactUs}
+          <Icon name="arrowRight" class="btn-icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .service-list {
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .service-card {
+    padding: 2.2rem;
+  }
+
+  .service-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .service-head .icon-badge {
+    margin-bottom: 0;
+  }
+
+  .service-head h2 {
+    margin: 0;
+    font-size: 1.45rem;
+  }
+
+  .service-text {
+    color: var(--c-text-muted);
+    max-width: 56rem;
+  }
+
+  .offers-title {
+    font-size: 1.02rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-primary);
+    margin-bottom: 0.8rem;
+  }
+
+  :global(html[data-contrast='high']) .offers-title {
+    color: var(--c-accent);
+  }
+
+  .more-title {
+    font-size: 1.25rem;
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .eligibility {
+    border-left: 6px solid var(--c-primary);
+    margin-bottom: 2rem;
+  }
+
+  .need-help {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    background: linear-gradient(135deg, var(--c-primary-strong), var(--c-primary));
+    color: var(--c-on-primary);
+    border-radius: var(--radius-lg);
+    padding: 2.2rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  :global(html[data-contrast='high']) .need-help {
+    background: var(--c-surface);
+    color: var(--c-text);
+    border: 2px solid var(--c-border);
+  }
+
+  .need-help h2 {
+    color: inherit;
+    margin-bottom: 0.3em;
+  }
+
+  .need-help p {
+    margin: 0;
+    max-width: 36rem;
+    opacity: 0.95;
+  }
+</style>

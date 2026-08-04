@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, type Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} path="/about" title={t.about.title} description={t.about.intro}>
+  <PageHeader title={t.about.title} intro={t.about.intro} />
+
+  <section class="section" aria-labelledby="history-title">
+    <div class="container story-grid">
+      <div class="card story-card">
+        <span class="icon-badge"><Icon name="calendar" /></span>
+        <h2 id="history-title">{t.about.historyTitle}</h2>
+        <p>{t.about.historyText}</p>
+      </div>
+      <div class="card story-card">
+        <span class="icon-badge"><Icon name="heart" /></span>
+        <h2>{t.about.missionTitle}</h2>
+        <p>{t.about.missionText}</p>
+        <p class="mb-0">{t.about.missionExtended}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="team-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="team-title">{t.about.teamTitle}</h2>
+      </div>
+      <div class="grid-2 team-grid">
+        {
+          t.about.team.map((member) => (
+            <div class="card team-card">
+              <div class="team-avatar" aria-hidden="true">
+                {member.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
+              </div>
+              <div>
+                <h3>{member.name}</h3>
+                <p class="team-role">{member.role}</p>
+                <p class="team-bio">{member.bio}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story-grid {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  @media (min-width: 800px) {
+    .story-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+
+  .team-card {
+    display: flex;
+    gap: 1.3rem;
+    align-items: flex-start;
+  }
+
+  .team-avatar {
+    flex-shrink: 0;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--c-primary), var(--c-primary-strong));
+    color: var(--c-on-primary);
+    font-weight: 750;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+
+  .team-role {
+    color: var(--c-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(html[data-contrast='high']) .team-role {
+    color: var(--c-accent);
+  }
+
+  .team-bio {
+    color: var(--c-text-muted);
+    margin-bottom: 0;
+  }
+</style>

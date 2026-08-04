@@ -1,0 +1,106 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const activities = [
+  {
+    icon: 'palette',
+    title: t.activities.workshopsTitle,
+    text: t.activities.workshopsText,
+    image: '/images/gallery/kindness-poster.jpg',
+  },
+  {
+    icon: 'users',
+    title: t.activities.eventsTitle,
+    text: t.activities.eventsText,
+    image: '/images/gallery/community-meeting-1.jpg',
+  },
+  {
+    icon: 'compass',
+    title: t.activities.outdoorTitle,
+    text: t.activities.outdoorText,
+    image: '/images/gallery/white-cane-street.jpg',
+  },
+] as const;
+---
+
+<Base lang={lang} path="/activities" title={t.activities.title} description={t.activities.intro}>
+  <PageHeader title={t.activities.title} intro={t.activities.intro} />
+
+  <section class="section" aria-label={t.activities.title}>
+    <div class="container">
+      <div class="grid-3">
+        {
+          activities.map((a) => (
+            <article class="card activity-card">
+              <img src={a.image} alt="" width="1080" height="810" loading="lazy" class="activity-img" />
+              <div class="activity-body">
+                <span class="icon-badge">
+                  <Icon name={a.icon} />
+                </span>
+                <h2 class="activity-title">{a.title}</h2>
+                <p class="activity-text">{a.text}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="section-cta">
+        <a href={localizeUrl(lang, '/gallery')} class="btn btn-primary">
+          <Icon name="images" class="btn-icon" />
+          {t.activities.galleryCta}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .activity-card {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .activity-img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .activity-body {
+    padding: 1.6rem;
+  }
+
+  .activity-body .icon-badge {
+    margin-top: -3.2rem;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+
+  .activity-title {
+    font-size: 1.3rem;
+  }
+
+  .activity-text {
+    color: var(--c-text-muted);
+    margin-bottom: 0;
+  }
+
+  .section-cta {
+    margin-top: 2.4rem;
+  }
+</style>

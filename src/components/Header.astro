@@ -1,0 +1,485 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const t = useTranslations(lang);
+
+const navItems = [
+  { href: '/', label: t.nav.home },
+  { href: '/about', label: t.nav.about },
+  { href: '/services', label: t.nav.services },
+  { href: '/activities', label: t.nav.activities },
+  { href: '/gallery', label: t.nav.gallery },
+  { href: '/contact', label: t.nav.contact },
+];
+
+const otherLang: Lang = lang === 'bg' ? 'en' : 'bg';
+const switchUrl = localizeUrl(otherLang, path);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href={localizeUrl(lang, '/')} class="brand">
+      <img src="/images/logo.png" alt="" width="48" height="48" class="brand-logo logo-default" />
+      <img src="/images/logo-dark.png" alt="" width="48" height="48" class="brand-logo logo-contrast" />
+      <span class="brand-name">
+        <strong>{t.siteNameShort}</strong>
+        <span class="brand-sub">{lang === 'bg' ? 'Пазарджик' : 'Pazardzhik'}</span>
+      </span>
+    </a>
+
+    <nav aria-label={t.nav.mainNav} class="main-nav" id="main-nav">
+      <ul>
+        {
+          navItems.map((item) => {
+            const href = localizeUrl(lang, item.href);
+            const isCurrent = path === item.href;
+            return (
+              <li>
+                <a href={href} aria-current={isCurrent ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href={switchUrl} class="lang-switch" title={t.nav.switchLang}>
+        <span aria-hidden="true">{t.nav.switchLangShort}</span>
+        <span class="visually-hidden">{t.nav.switchLang}</span>
+      </a>
+
+      <button
+        type="button"
+        class="icon-btn"
+        id="a11y-toggle"
+        aria-expanded="false"
+        aria-controls="a11y-menu"
+        aria-label={t.a11y.openSettings}
+        title={t.a11y.openSettings}
+      >
+        <Icon name="eye" />
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn menu-toggle"
+        id="menu-toggle"
+        aria-expanded="false"
+        aria-controls="main-nav"
+        aria-label={t.nav.openMenu}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path class="icon-open" d="M4 7h16M4 12h16M4 17h16" />
+          <path class="icon-close" d="M6 6l12 12M18 6L6 18" style="display:none" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="a11y-menu" id="a11y-menu" hidden>
+    <div class="container a11y-inner" role="group" aria-label={t.a11y.title}>
+      <div class="a11y-group">
+        <span class="a11y-label" id="a11y-contrast-label">{t.a11y.contrast}</span>
+        <button
+          type="button"
+          class="a11y-btn"
+          id="contrast-toggle"
+          aria-pressed="false"
+          aria-labelledby="a11y-contrast-label"
+        >
+          <Icon name="sun" />
+          <span data-on={t.a11y.contrastOff} data-off={t.a11y.contrastOn}>{t.a11y.contrastOn}</span>
+        </button>
+      </div>
+
+      <div class="a11y-group" role="group" aria-label={t.a11y.fontSize}>
+        <span class="a11y-label">{t.a11y.fontSize}</span>
+        <div class="a11y-btnrow">
+          <button type="button" class="a11y-btn font-btn" data-size="" aria-pressed="true">
+            A<span class="visually-hidden"> – {t.a11y.fontNormal}</span>
+          </button>
+          <button type="button" class="a11y-btn font-btn font-lg" data-size="lg" aria-pressed="false">
+            A<span class="visually-hidden"> – {t.a11y.fontLarge}</span>
+          </button>
+          <button type="button" class="a11y-btn font-btn font-xl" data-size="xl" aria-pressed="false">
+            A<span class="visually-hidden"> – {t.a11y.fontXL}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="a11y-group">
+        <span class="a11y-label" id="a11y-read-label">{t.a11y.title}</span>
+        <button
+          type="button"
+          class="a11y-btn"
+          id="read-aloud"
+          data-lang={lang === 'bg' ? 'bg-BG' : 'en-US'}
+          data-stop={t.a11y.stopReading}
+          data-start={t.a11y.readAloud}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="20" height="20">
+            <path d="M11 5 6 9H2v6h4l5 4V5Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7M18.4 5.6a9 9 0 0 1 0 12.8" />
+          </svg>
+          <span>{t.a11y.readAloud}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 0.65rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--c-text);
+    margin-right: auto;
+  }
+
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .logo-contrast { display: none; }
+  :global(html[data-contrast='high']) .logo-default { display: none; }
+  :global(html[data-contrast='high']) .logo-contrast { display: block; }
+
+  .brand-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .brand-name strong {
+    font-size: 1.06rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-sub {
+    font-size: 0.78rem;
+    color: var(--c-text-muted);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .main-nav ul {
+    display: flex;
+    gap: 0.2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-nav a {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .main-nav a:hover {
+    background: var(--c-primary-soft);
+    color: var(--c-primary-strong);
+  }
+
+  .main-nav a[aria-current='page'] {
+    color: var(--c-primary);
+    box-shadow: inset 0 -3px 0 var(--c-accent);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.6rem;
+    height: 2.6rem;
+    padding-inline: 0.6rem;
+    border: 2px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    font-weight: 750;
+    text-decoration: none;
+    color: var(--c-text);
+  }
+
+  .lang-switch:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 2px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--c-text);
+    cursor: pointer;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+
+  .icon-btn svg {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  /* Accessibility menu */
+  .a11y-menu {
+    border-top: 1px solid var(--c-border);
+    background: var(--c-primary-soft);
+  }
+
+  .a11y-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    padding-block: 0.9rem;
+  }
+
+  .a11y-group {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .a11y-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .a11y-btnrow {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .a11y-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.42rem 0.8rem;
+    border: 2px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    background: var(--c-surface);
+    color: var(--c-text);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+
+  .a11y-btn:hover {
+    border-color: var(--c-primary);
+  }
+
+  .a11y-btn[aria-pressed='true'] {
+    background: var(--c-primary);
+    border-color: var(--c-primary);
+    color: var(--c-on-primary);
+  }
+
+  .a11y-btn svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .font-btn { font-size: 0.9rem; }
+  .font-btn.font-lg { font-size: 1.08rem; }
+  .font-btn.font-xl { font-size: 1.28rem; }
+
+  @media (max-width: 860px) {
+    .menu-toggle {
+      display: inline-flex;
+    }
+
+    .main-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .main-nav.open {
+      display: block;
+    }
+
+    .main-nav ul {
+      flex-direction: column;
+      padding: 0.8rem 1.2rem 1.2rem;
+      gap: 0.15rem;
+    }
+
+    .main-nav a {
+      padding: 0.75rem 0.9rem;
+      font-size: 1.05rem;
+    }
+
+    .main-nav a[aria-current='page'] {
+      box-shadow: inset 4px 0 0 var(--c-accent);
+      border-radius: var(--radius-sm);
+      background: var(--c-primary-soft);
+    }
+  }
+</style>
+
+<script>
+  // --- Mobile menu -------------------------------------------------------
+  const menuToggle = document.getElementById('menu-toggle');
+  const mainNav = document.getElementById('main-nav');
+
+  menuToggle?.addEventListener('click', () => {
+    const open = mainNav?.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(!!open));
+    const openIcon = menuToggle.querySelector<SVGPathElement>('.icon-open');
+    const closeIcon = menuToggle.querySelector<SVGPathElement>('.icon-close');
+    if (openIcon && closeIcon) {
+      openIcon.style.display = open ? 'none' : '';
+      closeIcon.style.display = open ? '' : 'none';
+    }
+  });
+
+  // --- Accessibility menu ------------------------------------------------
+  const a11yToggle = document.getElementById('a11y-toggle');
+  const a11yMenu = document.getElementById('a11y-menu');
+
+  a11yToggle?.addEventListener('click', () => {
+    if (!a11yMenu) return;
+    const willOpen = a11yMenu.hidden;
+    a11yMenu.hidden = !willOpen;
+    a11yToggle.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  // --- High contrast -----------------------------------------------------
+  const contrastToggle = document.getElementById('contrast-toggle');
+
+  function syncContrastButton() {
+    const on = document.documentElement.dataset.contrast === 'high';
+    contrastToggle?.setAttribute('aria-pressed', String(on));
+    const label = contrastToggle?.querySelector('span');
+    if (label) label.textContent = on ? label.dataset.on ?? '' : label.dataset.off ?? '';
+  }
+
+  contrastToggle?.addEventListener('click', () => {
+    const on = document.documentElement.dataset.contrast === 'high';
+    if (on) {
+      delete document.documentElement.dataset.contrast;
+      localStorage.removeItem('a11y-contrast');
+    } else {
+      document.documentElement.dataset.contrast = 'high';
+      localStorage.setItem('a11y-contrast', 'high');
+    }
+    syncContrastButton();
+  });
+
+  syncContrastButton();
+
+  // --- Font size ---------------------------------------------------------
+  const fontButtons = document.querySelectorAll<HTMLButtonElement>('.font-btn');
+
+  function syncFontButtons() {
+    const current = document.documentElement.dataset.fontsize ?? '';
+    fontButtons.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String((btn.dataset.size ?? '') === current));
+    });
+  }
+
+  fontButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const size = btn.dataset.size ?? '';
+      if (size) {
+        document.documentElement.dataset.fontsize = size;
+        localStorage.setItem('a11y-fontsize', size);
+      } else {
+        delete document.documentElement.dataset.fontsize;
+        localStorage.removeItem('a11y-fontsize');
+      }
+      syncFontButtons();
+    });
+  });
+
+  syncFontButtons();
+
+  // --- Read page aloud ---------------------------------------------------
+  const readBtn = document.getElementById('read-aloud');
+
+  readBtn?.addEventListener('click', () => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+
+    if (synth.speaking) {
+      synth.cancel();
+      const label = readBtn.querySelector('span');
+      if (label) label.textContent = readBtn.dataset.start ?? '';
+      return;
+    }
+
+    const main = document.getElementById('main');
+    if (!main) return;
+
+    const utterance = new SpeechSynthesisUtterance(main.innerText);
+    utterance.lang = readBtn.dataset.lang ?? 'bg-BG';
+    utterance.rate = 0.95;
+    utterance.onend = () => {
+      const label = readBtn.querySelector('span');
+      if (label) label.textContent = readBtn.dataset.start ?? '';
+    };
+    synth.speak(utterance);
+    const label = readBtn.querySelector('span');
+    if (label) label.textContent = readBtn.dataset.stop ?? '';
+  });
+
+  window.addEventListener('beforeunload', () => window.speechSynthesis?.cancel());
+</script>

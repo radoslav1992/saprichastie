@@ -1,0 +1,191 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const navItems = [
+  { href: '/', label: t.nav.home },
+  { href: '/about', label: t.nav.about },
+  { href: '/services', label: t.nav.services },
+  { href: '/activities', label: t.nav.activities },
+  { href: '/gallery', label: t.nav.gallery },
+  { href: '/contact', label: t.nav.contact },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col footer-brand">
+      <img src="/images/logo-dark.png" alt="" width="72" height="72" class="footer-logo" />
+      <p class="footer-name">{t.siteName}</p>
+      <p class="footer-desc">{t.footer.description}</p>
+    </div>
+
+    <div class="footer-col">
+      <h2 class="footer-heading">{t.nav.contact}</h2>
+      <address>
+        <p>
+          <Icon name="pin" class="footer-icon" />
+          {t.contact.addressContent}
+        </p>
+        <p>
+          <Icon name="phone" class="footer-icon" />
+          <a href="tel:+359876773573">{t.contact.phoneNumber}</a>
+        </p>
+        <p>
+          <Icon name="mail" class="footer-icon" />
+          <a href={`mailto:${t.contact.emailAddress}`}>{t.contact.emailAddress}</a>
+        </p>
+        <p>
+          <Icon name="clock" class="footer-icon" />
+          {t.contact.hoursWeekday}
+        </p>
+      </address>
+    </div>
+
+    <div class="footer-col">
+      <h2 class="footer-heading">{t.nav.menu}</h2>
+      <nav aria-label={t.nav.footerNav}>
+        <ul class="footer-nav">
+          {navItems.map((item) => (
+            <li><a href={localizeUrl(lang, item.href)}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-col">
+      <h2 class="footer-heading">{t.a11y.title}</h2>
+      <p class="footer-desc">{t.a11y.statement}</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; {year} {t.siteName}. {t.footer.rights}.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 4rem;
+    background: var(--c-primary-strong);
+    color: #e8f1f4;
+  }
+
+  :global(html[data-contrast='high']) .site-footer {
+    background: var(--c-surface);
+    color: var(--c-text);
+    border-top: 2px solid var(--c-border);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2.2rem;
+    padding-block: 3rem 2.4rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-grid { grid-template-columns: 1.3fr 1.1fr 0.8fr 1fr; }
+  }
+
+  .footer-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-name {
+    font-weight: 750;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  :global(html[data-contrast='high']) .footer-name { color: var(--c-text); }
+
+  .footer-desc {
+    font-size: 0.95rem;
+    opacity: 0.88;
+    margin: 0;
+  }
+
+  .footer-heading {
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-accent);
+    margin-bottom: 1rem;
+  }
+
+  address {
+    font-style: normal;
+    font-size: 0.97rem;
+  }
+
+  address p {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    margin-bottom: 0.7rem;
+  }
+
+  :global(.footer-icon) {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+    margin-top: 0.22em;
+    color: var(--c-accent);
+  }
+
+  .site-footer a {
+    color: #fff;
+    text-decoration-color: color-mix(in srgb, #fff 45%, transparent);
+  }
+
+  .site-footer a:hover {
+    color: var(--c-accent);
+  }
+
+  :global(html[data-contrast='high']) .site-footer a {
+    color: var(--c-primary);
+  }
+
+  .footer-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-nav li {
+    margin-bottom: 0.55rem;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    padding-block: 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  :global(html[data-contrast='high']) .footer-bottom {
+    border-top-color: var(--c-border);
+  }
+
+  .footer-bottom p {
+    margin: 0;
+    opacity: 0.85;
+  }
+</style>

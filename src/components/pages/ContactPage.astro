@@ -1,0 +1,314 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, localizeUrl, type Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const contactPath = localizeUrl(lang, '/contact');
+---
+
+<Base lang={lang} path="/contact" title={t.contact.title} description={t.contact.intro}>
+  <PageHeader title={t.contact.title} intro={t.contact.intro} />
+
+  <section class="section" aria-label={t.contact.title}>
+    <div class="container contact-grid">
+      <!-- Contact info -->
+      <div>
+        <h2>{t.contact.infoTitle}</h2>
+        <div class="card info-card">
+          <div class="info-row">
+            <span class="icon-badge"><Icon name="pin" /></span>
+            <div>
+              <h3>{t.contact.address}</h3>
+              <p>{t.contact.addressContent}</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="icon-badge"><Icon name="phone" /></span>
+            <div>
+              <h3>{t.contact.phone}</h3>
+              <p><a href="tel:+359876773573">{t.contact.phoneNumber}</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="icon-badge"><Icon name="mail" /></span>
+            <div>
+              <h3>{t.contact.email}</h3>
+              <p><a href={`mailto:${t.contact.emailAddress}`}>{t.contact.emailAddress}</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="icon-badge"><Icon name="clock" /></span>
+            <div>
+              <h3>{t.contact.hours}</h3>
+              <p>{t.contact.hoursWeekday}<br />{t.contact.hoursWeekend}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact form -->
+      <div>
+        <h2 id="form-title">{t.contact.formTitle}</h2>
+        <form
+          class="card contact-form"
+          id="contact-form"
+          method="POST"
+          action="/api/contact"
+          aria-labelledby="form-title"
+          data-lang={lang}
+        >
+          <p class="form-note">{t.contact.formRequired}</p>
+
+          <div
+            class="form-status"
+            id="form-status"
+            role="status"
+            aria-live="polite"
+            hidden
+            data-success={t.contact.formSuccess}
+            data-error={t.contact.formError}
+          >
+          </div>
+
+          <div class="form-field">
+            <label for="cf-name">{t.contact.formName} <span aria-hidden="true">*</span></label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name" maxlength="200" />
+          </div>
+
+          <div class="form-field">
+            <label for="cf-email">{t.contact.formEmail} <span aria-hidden="true">*</span></label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" maxlength="254" />
+          </div>
+
+          <div class="form-field">
+            <label for="cf-subject">{t.contact.formSubject}</label>
+            <input id="cf-subject" name="subject" type="text" maxlength="300" />
+          </div>
+
+          <div class="form-field">
+            <label for="cf-message">{t.contact.formMessage} <span aria-hidden="true">*</span></label>
+            <textarea id="cf-message" name="message" required rows="6" maxlength="5000"></textarea>
+          </div>
+
+          <!-- Honeypot: invisible to humans, bots tend to fill it in. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="cf-website">Website</label>
+            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <input type="hidden" name="lang" value={lang} />
+          <input type="hidden" name="redirect" value={contactPath} />
+
+          <button type="submit" class="btn btn-primary form-submit" data-sending={t.contact.formSending}>
+            {t.contact.formSubmit}
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="a11y-statement-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{t.a11y.title}</span>
+        <h2 id="a11y-statement-title">{t.contact.accessibilityTitle}</h2>
+      </div>
+      <div class="card statement-card">
+        <p>{t.contact.accessibilityText1}</p>
+        <p class="mb-0">{t.contact.accessibilityText2}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 2.4rem;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1.15fr;
+    }
+  }
+
+  .info-card {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .info-row {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+  }
+
+  .info-row .icon-badge {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .info-row h3 {
+    margin-bottom: 0.15em;
+    font-size: 1.08rem;
+  }
+
+  .info-row p {
+    margin: 0;
+    color: var(--c-text-muted);
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .form-note {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--c-text-muted);
+  }
+
+  .form-status {
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+  }
+
+  .form-status.success {
+    background: #e5f4e8;
+    color: #14532d;
+    border: 1px solid #bbe3c5;
+  }
+
+  .form-status.error {
+    background: #fdeaea;
+    color: #7f1d1d;
+    border: 1px solid #f3c4c4;
+  }
+
+  :global(html[data-contrast='high']) .form-status.success,
+  :global(html[data-contrast='high']) .form-status.error {
+    background: var(--c-surface);
+    color: var(--c-text);
+    border: 2px solid var(--c-accent);
+  }
+
+  .form-field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .form-field label {
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    font: inherit;
+    padding: 0.7rem 0.9rem;
+    border: 2px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    background: var(--c-surface);
+    color: var(--c-text);
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus {
+    border-color: var(--c-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 22%, transparent);
+  }
+
+  .form-field textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  .hp-field {
+    position: absolute !important;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form-submit {
+    justify-self: start;
+  }
+
+  .form-submit[disabled] {
+    opacity: 0.65;
+    cursor: wait;
+  }
+
+  .statement-card {
+    border-left: 6px solid var(--c-accent);
+    max-width: 56rem;
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+</style>
+
+<script>
+  // Progressive enhancement: intercept the submit and show inline status.
+  // Without JavaScript the form still works via a normal POST + redirect.
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  const submitBtn = form?.querySelector<HTMLButtonElement>('.form-submit');
+
+  // Show a status message when redirected back after a no-JS submission.
+  const params = new URLSearchParams(window.location.search);
+  if (status && params.has('sent')) {
+    status.hidden = false;
+    const ok = params.get('sent') === '1';
+    status.classList.add(ok ? 'success' : 'error');
+    status.textContent = (ok ? status.dataset.success : status.dataset.error) ?? '';
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    if (!status || !submitBtn) return;
+    e.preventDefault();
+
+    const original = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = submitBtn.dataset.sending ?? original;
+    status.hidden = true;
+    status.classList.remove('success', 'error');
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      const ok = res.ok;
+      status.hidden = false;
+      status.classList.add(ok ? 'success' : 'error');
+      status.textContent = (ok ? status.dataset.success : status.dataset.error) ?? '';
+      if (ok) form.reset();
+    } catch {
+      status.hidden = false;
+      status.classList.add('error');
+      status.textContent = status.dataset.error ?? '';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+      status.focus?.();
+      status.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+</script>
