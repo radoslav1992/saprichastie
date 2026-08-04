@@ -1,0 +1,330 @@
+---
+import { Image } from 'astro:assets';
+import heroPhoto from '../../assets/photos/white-cane-demonstration.jpg';
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations, localizePath } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const cardLinks = ['/about', '/services', '/gallery'];
+---
+
+<Base lang={lang} path="/" title={t.home.metaTitle}>
+  <section data-read aria-label={t.home.sectionLabels.hero} class="hero rule-bottom">
+    <div class="hero__split">
+      <div class="hero__copy">
+        <span class="hero__badge" data-accent>{t.home.heroBadge}</span>
+        <h1>{t.home.heroTitle}</h1>
+        <p class="hero__text">{t.home.heroText}</p>
+        <div class="hero__ctas">
+          <a href={localizePath(lang, '/services')} class="btn btn--solid">{t.home.heroCta1}</a>
+          <a href={localizePath(lang, '/contact')} class="btn btn--outline">{t.home.heroCta2}</a>
+        </div>
+        <div class="hero__phone">
+          <a href={t.phoneHref}>{t.phone}</a>
+          <span class="muted">{t.home.heroHours}</span>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Image
+          src={heroPhoto}
+          alt={t.home.heroImageAlt}
+          widths={[640, 960, 1440]}
+          sizes="(max-width: 1100px) 100vw, 45vw"
+          loading="eager"
+        />
+      </div>
+    </div>
+    <ReadButton lang={lang} />
+  </section>
+
+  <section data-read aria-label={t.home.sectionLabels.start} class="start container">
+    <div class="start__head">
+      <h2 class="display">{t.home.startTitle}</h2>
+      <span class="muted start__sub">{t.home.startSubtitle}</span>
+    </div>
+    <div class="start__grid">
+      {
+        t.home.startCards.map((card, i) => (
+          <a href={localizePath(lang, cardLinks[i])} class="start-card card">
+            <span aria-hidden="true" class="start-card__num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="start-card__title">{card.title}</span>
+            <span class="start-card__text">{card.text}</span>
+            <span class="start-card__more">{t.home.startMore}</span>
+          </a>
+        ))
+      }
+    </div>
+    <ReadButton lang={lang} />
+  </section>
+
+  <section data-read aria-label={t.home.sectionLabels.mission} class="mission ink-panel">
+    <div class="mission__inner">
+      <span class="eyebrow eyebrow--accent">{t.home.missionLabel}</span>
+      <p class="mission__text">{t.home.missionText}</p>
+      <div class="mission__ctas">
+        <a href={localizePath(lang, '/activities')} class="btn btn--sm btn--accent btn--accent-on-ink">
+          {t.home.missionCta1}
+        </a>
+        <a href={localizePath(lang, '/contact')} class="btn btn--sm btn--ghost-on-ink">
+          {t.home.missionCta2}
+        </a>
+      </div>
+    </div>
+    <ReadButton lang={lang} />
+  </section>
+
+  <section data-read aria-label={t.home.sectionLabels.stats} class="stats container">
+    <div class="stats__grid">
+      {
+        t.home.stats.map((stat) => (
+          <div class="stat">
+            <span class="stat__value">{stat.value}</span>
+            <span class="muted stat__label">{stat.label}</span>
+          </div>
+        ))
+      }
+    </div>
+    <ReadButton lang={lang} />
+  </section>
+</Base>
+
+<style>
+  .hero__split {
+    max-width: var(--container);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: stretch;
+  }
+
+  .hero__copy {
+    padding: 76px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+  }
+
+  .hero__badge {
+    padding: 8px 16px;
+    background: var(--accent);
+    border: var(--border);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero__copy h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(40px, 4.6vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  .hero__text {
+    font-size: 22px;
+    line-height: 1.55;
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 6px;
+  }
+
+  .hero__phone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .hero__phone a {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .hero__phone .muted {
+    font-size: 16px;
+  }
+
+  .hero__media {
+    position: relative;
+    background: var(--ink);
+    border-left: var(--border);
+    min-height: 520px;
+  }
+
+  .hero__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .start {
+    padding-top: 84px;
+    padding-bottom: 84px;
+  }
+
+  .start__head {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 44px;
+  }
+
+  .start__head h2 {
+    font-size: clamp(30px, 3vw, 44px);
+    letter-spacing: -0.02em;
+  }
+
+  .start__sub {
+    font-size: 17px;
+  }
+
+  .start__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .start-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 34px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .start-card:hover {
+    background: var(--accent);
+    color: inherit;
+  }
+
+  .start-card__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .start-card__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .start-card__text {
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .start-card__more {
+    margin-top: auto;
+    padding-top: 14px;
+    font-weight: 800;
+    font-size: 17px;
+  }
+
+  .mission {
+    border-top: var(--border);
+    border-bottom: var(--border);
+  }
+
+  .mission__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 96px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+  }
+
+  .mission__text {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(24px, 2.5vw, 38px);
+    line-height: 1.34;
+    letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+
+  .mission__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 8px;
+  }
+
+  .stats {
+    padding-top: 84px;
+    padding-bottom: 84px;
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2px;
+    background: var(--ink);
+    border: var(--border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .stat {
+    background: var(--bg);
+    padding: 38px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat__value {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 46px;
+    letter-spacing: -0.03em;
+  }
+
+  .stat__label {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1100px) {
+    .hero__split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hero__media {
+      order: 2;
+      min-height: 300px;
+      border-left: 0;
+      border-top: var(--border);
+    }
+  }
+</style>

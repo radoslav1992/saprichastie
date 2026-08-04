@@ -1,0 +1,42 @@
+/**
+ * Cloudflare Worker configuration for the Saprichastie website.
+ *
+ * The site is an Astro static build with one server endpoint
+ * (POST /api/contact) that sends contact-form submissions through
+ * Cloudflare Email Routing.
+ *
+ * Before the contact form can deliver mail you must, in the Cloudflare
+ * dashboard for the saprichastie.org zone:
+ *   1. Enable Email Routing.
+ *   2. Verify the destination mailbox (CONTACT_TO below) as a
+ *      destination address.
+ * The sender (CONTACT_FROM) must be an address on the saprichastie.org
+ * domain — it does not need to be a real mailbox.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saprichastie",
+  "compatibility_date": "2025-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./dist/_worker.js/index.js",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Email Routing binding used by /api/contact to send the form as email.
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL"
+    }
+  ],
+  "vars": {
+    // Envelope sender: any address on the saprichastie.org domain.
+    "CONTACT_FROM": "website@saprichastie.org",
+    // Where contact-form messages are delivered. Must be a verified
+    // destination address in Cloudflare Email Routing.
+    "CONTACT_TO": "info@saprichastie.org"
+  }
+}

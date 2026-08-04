@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const toc = [
+  { href: '#istoria', label: t.about.toc.history },
+  { href: '#misia', label: t.about.toc.mission },
+  { href: '#ekip', label: t.about.toc.team },
+];
+
+/* Initials for the portrait circles until real portraits are provided. */
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((part) => part[0])
+    .join('');
+---
+
+<Base lang={lang} path="/about" title={t.about.metaTitle}>
+  <div class="page-head">
+    <div class="page-head__inner">
+      <span class="eyebrow">{t.about.eyebrow}</span>
+      <h1>{t.about.title}</h1>
+    </div>
+  </div>
+
+  <div class="rail">
+    <nav aria-label={t.about.onThisPage} class="rail__nav" data-noprint>
+      <span class="rail__nav-label">{t.about.onThisPage}</span>
+      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="rail__content about-content">
+      <section id="istoria" data-read>
+        <h2 class="section-title">{t.about.historyTitle}</h2>
+        <div class="prose">
+          <p>{t.about.historyP1}</p>
+          <p>{t.about.historyP2}</p>
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="misia" data-read class="accent-panel mission-panel">
+        <h2 class="section-title">{t.about.missionTitle}</h2>
+        <div class="prose prose--narrow">
+          <p>{t.about.missionP1}</p>
+          <p>{t.about.missionP2}</p>
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="ekip" data-read>
+        <h2 class="section-title section-title--team">{t.about.teamTitle}</h2>
+        <div class="team-grid">
+          {
+            t.about.team.map((member) => (
+              <div class="card team-card">
+                <div class="team-card__head">
+                  <span aria-hidden="true" class="team-card__avatar">{initials(member.name)}</span>
+                  <div class="team-card__id">
+                    <h3>{member.name}</h3>
+                    <p class="team-card__role">{member.role}</p>
+                  </div>
+                </div>
+                <p class="team-card__text">{member.text}</p>
+              </div>
+            ))
+          }
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about-content {
+    gap: 64px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+  }
+
+  .section-title--team {
+    margin-bottom: 26px;
+  }
+
+  .prose {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 66ch;
+  }
+
+  .prose p {
+    font-size: 21px;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .prose--narrow {
+    max-width: 64ch;
+  }
+
+  .mission-panel {
+    padding: 44px;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .team-card {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .team-card__head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .team-card__avatar {
+    width: 64px;
+    height: 64px;
+    flex: none;
+    background: var(--ink);
+    color: var(--accent);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+  }
+
+  .team-card__id {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .team-card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .team-card__role {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted-2);
+  }
+
+  .team-card__text {
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .mission-panel {
+      padding: 28px;
+    }
+  }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saprichastie.org/sitemap-index.xml

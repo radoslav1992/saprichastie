@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import centerGroup from '../../assets/photos/center-group.jpg';
+import groupSession from '../../assets/photos/group-session.jpg';
+import computerTraining from '../../assets/photos/computer-training.jpg';
+import urbanOrientation from '../../assets/photos/urban-orientation.jpg';
+import legalConsultation from '../../assets/photos/legal-consultation.jpg';
+import showdownPractice from '../../assets/photos/showdown-practice.jpg';
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations, localizePath } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = t.services;
+
+const toc = [
+  { href: '#csri', label: s.toc.csri },
+  { href: '#psiho', label: s.toc.psycho },
+  { href: '#komp', label: s.toc.computer },
+  { href: '#orient', label: s.toc.orientation },
+  { href: '#pravna', label: s.toc.legal },
+  { href: '#sport', label: s.toc.sport },
+  { href: '#obuchenia', label: s.toc.training },
+];
+
+const smallCards = [
+  { id: 'komp', num: '03', data: s.computer, image: computerTraining },
+  { id: 'orient', num: '04', data: s.orientation, image: urbanOrientation },
+  { id: 'pravna', num: '05', data: s.legal, image: legalConsultation },
+  { id: 'sport', num: '06', data: s.sport, image: showdownPractice },
+];
+---
+
+<Base lang={lang} path="/services" title={s.metaTitle} description={s.intro}>
+  <div class="page-head">
+    <div class="page-head__inner">
+      <span class="eyebrow">{s.eyebrow}</span>
+      <h1>{s.title}</h1>
+      <p class="intro">{s.intro}</p>
+    </div>
+  </div>
+
+  <div class="rail">
+    <nav aria-label={s.onThisPage} class="rail__nav" data-noprint>
+      <span class="rail__nav-label">{s.onThisPage}</span>
+      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="rail__content services-content">
+      <section id="csri" data-read class="card service-split">
+        <div class="service-split__copy">
+          <span aria-hidden="true" class="service-num">01</span>
+          <h2>{s.csri.title}</h2>
+          <p class="service-text">{s.csri.text}</p>
+          <h3 class="list-title">{s.csri.listTitle}</h3>
+          <ul class="dash-list">
+            {s.csri.list.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="service-split__media service-split__media--right">
+          <Image
+            src={centerGroup}
+            alt={s.csri.imageAlt}
+            widths={[480, 800, 1080]}
+            sizes="(max-width: 1100px) 100vw, 40vw"
+          />
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="psiho" data-read class="card service-split service-split--media-first">
+        <div class="service-split__media service-split__media--left">
+          <Image
+            src={groupSession}
+            alt={s.psycho.imageAlt}
+            widths={[480, 800, 1080]}
+            sizes="(max-width: 1100px) 100vw, 40vw"
+          />
+        </div>
+        <div class="service-split__copy">
+          <span aria-hidden="true" class="service-num">02</span>
+          <h2>{s.psycho.title}</h2>
+          <p class="service-text">{s.psycho.text}</p>
+          <h3 class="list-title">{s.psycho.listTitle}</h3>
+          <ul class="dash-list">
+            {s.psycho.list.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+
+      <div class="service-cards">
+        {
+          smallCards.map((card) => (
+            <section id={card.id} data-read class="card service-card">
+              <div class="service-card__media">
+                <Image
+                  src={card.image}
+                  alt={card.data.imageAlt}
+                  widths={[420, 720]}
+                  sizes="(max-width: 760px) 100vw, 420px"
+                />
+              </div>
+              <div class="service-card__body">
+                <span aria-hidden="true" class="service-num">{card.num}</span>
+                <h2>{card.data.title}</h2>
+                <p>{card.data.text}</p>
+              </div>
+              <ReadButton lang={lang} />
+            </section>
+          ))
+        }
+      </div>
+
+      <section id="obuchenia" data-read class="accent-panel training-panel">
+        <span aria-hidden="true" class="service-num service-num--ink">07</span>
+        <h2>{s.training.title}</h2>
+        <p class="service-text service-text--wide">{s.training.text}</p>
+        <h3 class="list-title">{s.training.listTitle}</h3>
+        <ul class="dash-list dash-list--grid">
+          {s.training.list.map((item) => <li>{item}</li>)}
+        </ul>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section data-read class="ink-panel cta-panel">
+        <div class="cta-panel__copy">
+          <h2>{s.ctaTitle}</h2>
+          <p>{s.ctaText}</p>
+        </div>
+        <a href={localizePath(lang, '/contact')} class="btn btn--accent btn--accent-on-ink">
+          {s.ctaButton}
+        </a>
+        <ReadButton lang={lang} />
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .services-content {
+    gap: 26px;
+  }
+
+  .service-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--muted-2);
+  }
+
+  .service-num--ink {
+    color: inherit;
+  }
+
+  .service-split {
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .service-split__copy {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .service-split h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .service-text {
+    font-size: 20px;
+    line-height: 1.6;
+  }
+
+  .service-text--wide {
+    max-width: 64ch;
+  }
+
+  .list-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-top: 6px;
+  }
+
+  .service-split__media {
+    position: relative;
+    min-height: 340px;
+  }
+
+  .service-split__media--right {
+    border-left: var(--border);
+  }
+
+  .service-split__media--left {
+    border-right: var(--border);
+  }
+
+  .service-split__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 26px;
+  }
+
+  .service-card {
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service-card__media {
+    position: relative;
+    height: 200px;
+    border-bottom: var(--border);
+  }
+
+  .service-card__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .service-card__body {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .service-card h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .service-card p {
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  .training-panel {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .training-panel h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-panel {
+    border-radius: var(--radius-panel);
+    padding: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .cta-panel__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 52ch;
+  }
+
+  .cta-panel h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-panel p {
+    font-size: 20px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1100px) {
+    .service-split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .service-split__media {
+      order: 2;
+      min-height: 300px;
+      border-left: 0;
+      border-right: 0;
+      border-top: var(--border);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .service-split__copy,
+    .training-panel,
+    .cta-panel {
+      padding: 28px;
+    }
+  }
+</style>

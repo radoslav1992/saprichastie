@@ -1,0 +1,270 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const c = t.contact;
+
+const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Пазарджик, България');
+---
+
+<Base lang={lang} path="/contact" title={c.metaTitle} description={c.intro}>
+  <div class="page-head">
+    <div class="page-head__inner">
+      <span class="eyebrow">{c.eyebrow}</span>
+      <h1>{c.title}</h1>
+      <p class="intro">{c.intro}</p>
+    </div>
+  </div>
+
+  <div class="contact-grid">
+    <section data-read class="contact-col">
+      <h2>{c.infoTitle}</h2>
+      <div class="card info-card">
+        <div class="info-row">
+          <span class="info-label">{c.addressLabel}</span>
+          <p class="info-value">{c.address}</p>
+        </div>
+        <div class="info-row">
+          <span class="info-label">{c.phoneLabel}</span>
+          <a href={t.phoneHref} class="info-phone">{t.phone}</a>
+        </div>
+        <div class="info-row">
+          <span class="info-label">{c.emailLabel}</span>
+          <a href={`mailto:${t.email}`} class="info-mail">{t.email}</a>
+        </div>
+        <div class="info-row info-row--last">
+          <span class="info-label">{c.hoursLabel}</span>
+          <p class="info-value">{c.hoursWeek}</p>
+          <p class="info-value">{c.hoursWeekend}</p>
+        </div>
+      </div>
+      <div class="card map-card">
+        <iframe
+          src={`https://maps.google.com/maps?q=${mapQuery}&z=16&output=embed`}
+          title={c.mapTitle}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <p class="map-link">
+        <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} rel="noopener">
+          {c.mapLink}
+        </a>
+      </p>
+      <ReadButton lang={lang} />
+    </section>
+
+    <section data-read class="contact-col">
+      <h2>{c.formTitle}</h2>
+      <form method="POST" action="/api/contact" class="card contact-form">
+        <input type="hidden" name="lang" value={lang} />
+        <p class="hp-field" aria-hidden="true">
+          <label for="f-website">Website</label>
+          <input id="f-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+        </p>
+        <div class="field">
+          <label for="f-name">{c.formName}</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="200" />
+        </div>
+        <div class="field">
+          <label for="f-mail">{c.formEmail}</label>
+          <input id="f-mail" name="email" type="email" autocomplete="email" required maxlength="200" />
+        </div>
+        <div class="field">
+          <label for="f-msg">{c.formMessage}</label>
+          <textarea id="f-msg" name="message" rows="6" required maxlength="5000"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">{c.formSubmit}</button>
+        <p class="muted form-note">{c.formNote}</p>
+      </form>
+
+      <div class="ink-panel a11y-statement">
+        <h2>{c.a11yTitle}</h2>
+        <p>{c.a11yP1}</p>
+        <p>{c.a11yP2}</p>
+      </div>
+      <ReadButton lang={lang} />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .contact-grid {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 52px 28px 90px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 26px;
+    align-items: start;
+  }
+
+  .contact-col {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .contact-col > h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+  }
+
+  .info-card {
+    overflow: hidden;
+  }
+
+  .info-row {
+    padding: 26px 30px;
+    border-bottom: 2px solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .info-row--last {
+    border-bottom: 0;
+  }
+
+  .info-label {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+
+  .info-value {
+    font-size: 21px;
+    line-height: 1.5;
+  }
+
+  .info-phone {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 3px solid var(--accent);
+    align-self: flex-start;
+  }
+
+  .info-mail {
+    font-size: 21px;
+    align-self: flex-start;
+  }
+
+  .map-card {
+    height: 240px;
+    overflow: hidden;
+  }
+
+  .map-card iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .map-link {
+    font-size: 17px;
+  }
+
+  .contact-form {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* honeypot — visually removed, still in the DOM for bots */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field label {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .field input,
+  .field textarea {
+    padding: 16px;
+    font-size: 19px;
+    font-family: inherit;
+    color: inherit;
+    border: var(--border);
+    border-radius: var(--radius-input);
+    background: var(--bg);
+  }
+
+  .field textarea {
+    resize: vertical;
+  }
+
+  .submit-btn {
+    padding: 18px;
+    background: var(--ink);
+    color: var(--bg);
+    border: var(--border);
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 19px;
+    cursor: pointer;
+  }
+
+  .submit-btn:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .form-note {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .a11y-statement {
+    border-radius: var(--radius-card);
+    padding: 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .a11y-statement h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .a11y-statement p {
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1100px) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
