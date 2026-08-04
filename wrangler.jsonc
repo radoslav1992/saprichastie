@@ -18,6 +18,12 @@
   "name": "saprichastie",
   "compatibility_date": "2025-07-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Runs automatically before `wrangler deploy` / `wrangler dev`, so a bare
+  // `npx wrangler deploy` (e.g. in Cloudflare Workers Builds) produces dist/
+  // before wrangler looks for it.
+  "build": {
+    "command": "npm install && npm run build"
+  },
   "main": "./dist/_worker.js/index.js",
   "assets": {
     "binding": "ASSETS",
