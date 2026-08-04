@@ -1,0 +1,86 @@
+---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/commissioner';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { type Lang, useTranslations, localizePath } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Language-neutral path of the current page, e.g. "/" or "/about". */
+  path: string;
+  title: string;
+  description?: string;
+}
+
+const { lang, path, title, description } = Astro.props;
+const t = useTranslations(lang);
+const fullTitle = `${t.site.title} · ${title}`;
+const site = Astro.site ?? new URL('https://saprichastie.org');
+const canonical = new URL(localizePath(lang, path), site);
+const altBg = new URL(localizePath('bg', path), site);
+const altEn = new URL(localizePath('en', path), site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description ?? t.site.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="bg" href={altBg} />
+    <link rel="alternate" hreflang="en" href={altEn} />
+    <link rel="alternate" hreflang="x-default" href={altBg} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description ?? t.site.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', site)} />
+    <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
+    <script is:inline>
+      /* Apply saved accessibility settings before first paint. */
+      (function () {
+        try {
+          var s = JSON.parse(localStorage.getItem('saprichastie-a11y') || '{}');
+          var d = document.documentElement;
+          if (s.fs) d.setAttribute('data-fs', s.fs);
+          if (s.hc) d.setAttribute('data-hc', s.hc);
+          if (s.space) d.setAttribute('data-space', '1');
+          if (s.links) d.setAttribute('data-links', '1');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div data-zoom="1" class="page-shell">
+      <a href="#main" class="skip-link">{t.header.skipLink}</a>
+      <Header lang={lang} path={path} />
+      <main id="main">
+        <slot />
+      </main>
+      <Footer lang={lang} />
+    </div>
+    <script>
+      import '../scripts/a11y.js';
+    </script>
+  </body>
+</html>
+
+<style>
+  .page-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+</style>

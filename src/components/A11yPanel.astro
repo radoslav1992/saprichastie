@@ -1,0 +1,167 @@
+---
+import { type Lang, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const sizes = [
+  { value: '100', label: 'A', fontSize: '15px' },
+  { value: '115', label: 'A', fontSize: '19px' },
+  { value: '135', label: 'A', fontSize: '23px' },
+  { value: '160', label: 'A', fontSize: '27px' },
+];
+---
+
+<div id="a11y-panel" class="a11y-panel" role="region" aria-label={t.a11y.panelLabel} hidden>
+  <div class="a11y-panel__grid">
+    <div class="a11y-panel__group">
+      <span class="a11y-panel__label">{t.a11y.textSize}</span>
+      <div class="a11y-panel__row">
+        {
+          sizes.map((s) => (
+            <button
+              type="button"
+              class="a11y-btn a11y-btn--size"
+              data-fs={s.value}
+              style={`font-size:${s.fontSize}`}
+              aria-pressed={s.value === '100' ? 'true' : 'false'}
+              aria-label={`${t.a11y.textSize} ${s.value}%`}
+            >
+              {s.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="a11y-panel__group">
+      <span class="a11y-panel__label">{t.a11y.contrast}</span>
+      <div class="a11y-panel__row">
+        <button type="button" class="a11y-btn" data-hc="off" aria-pressed="true">
+          {t.a11y.contrastStandard}
+        </button>
+        <button type="button" class="a11y-btn a11y-btn--dark" data-hc="dark" aria-pressed="false">
+          {t.a11y.contrastDark}
+        </button>
+      </div>
+    </div>
+
+    <div class="a11y-panel__group">
+      <span class="a11y-panel__label">{t.a11y.reading}</span>
+      <div class="a11y-panel__col">
+        <button type="button" class="a11y-btn a11y-btn--left" data-toggle="space" aria-pressed="false">
+          {t.a11y.spacedText}
+        </button>
+        <button type="button" class="a11y-btn a11y-btn--left" data-toggle="links" aria-pressed="false">
+          {t.a11y.underlineLinks}
+        </button>
+      </div>
+    </div>
+
+    <div class="a11y-panel__group">
+      <span class="a11y-panel__label">{t.a11y.readAloud}</span>
+      <p class="a11y-panel__hint muted">{t.a11y.readAloudHint}</p>
+      <button type="button" class="a11y-btn a11y-btn--stop" data-stop>
+        {t.a11y.stopReading}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .a11y-panel {
+    border-top: var(--border);
+    background: #efe7db;
+  }
+
+  .a11y-panel__grid {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 26px 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 26px;
+  }
+
+  .a11y-panel__group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .a11y-panel__label {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .a11y-panel__row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .a11y-panel__col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .a11y-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border: var(--border);
+    background: var(--bg);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .a11y-btn:hover {
+    background: var(--accent);
+  }
+
+  .a11y-btn--size {
+    padding: 12px 0;
+  }
+
+  .a11y-btn--dark {
+    background: var(--hc-bg);
+    color: var(--hc-fg);
+  }
+
+  .a11y-btn--left {
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .a11y-btn--stop {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .a11y-btn--stop:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .a11y-btn[aria-pressed='true']:not([data-hc='dark']):not([data-stop]) {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .a11y-btn[data-hc='dark'][aria-pressed='true'] {
+    outline: 4px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .a11y-panel__hint {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+</style>

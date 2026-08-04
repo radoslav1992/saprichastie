@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import computerTraining from '../../assets/photos/computer-training.jpg';
+import showdownPractice from '../../assets/photos/showdown-practice.jpg';
+import supportGroup from '../../assets/photos/support-group.jpg';
+import urbanOrientation from '../../assets/photos/urban-orientation.jpg';
+import brailleTrainingChildren from '../../assets/photos/braille-training-children.jpg';
+import whiteCaneDemonstration from '../../assets/photos/white-cane-demonstration.jpg';
+import centerGroup from '../../assets/photos/center-group.jpg';
+import mobilityObstacles from '../../assets/photos/mobility-obstacles.jpg';
+import kindnessMessage from '../../assets/photos/kindness-message.jpg';
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const g = t.gallery;
+
+const photos: Record<string, ImageMetadata> = {
+  'computer-training': computerTraining,
+  'showdown-practice': showdownPractice,
+  'support-group': supportGroup,
+  'urban-orientation': urbanOrientation,
+  'braille-training-children': brailleTrainingChildren,
+  'white-cane-demonstration': whiteCaneDemonstration,
+  'center-group': centerGroup,
+  'mobility-obstacles': mobilityObstacles,
+  'kindness-message': kindnessMessage,
+};
+---
+
+<Base lang={lang} path="/gallery" title={g.metaTitle} description={g.intro}>
+  <div class="page-head">
+    <div class="page-head__inner">
+      <span class="eyebrow">{g.eyebrow}</span>
+      <h1>{g.title}</h1>
+      <p class="intro">{g.intro}</p>
+    </div>
+  </div>
+
+  <section data-read class="container gallery">
+    <div class="gallery__grid">
+      {
+        g.items.map((item) => (
+          <figure class="card gallery-item">
+            <div class="gallery-item__media">
+              <Image
+                src={photos[item.key]}
+                alt={item.caption}
+                widths={[420, 720, 1080]}
+                sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 400px"
+              />
+            </div>
+            <figcaption>{item.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="muted gallery__note">
+      {g.submitNote}
+      <a href={`mailto:${t.email}`}>{t.email}</a>
+      {g.submitNote2}
+    </p>
+    <ReadButton lang={lang} />
+  </section>
+</Base>
+
+<style>
+  .gallery {
+    padding-top: 52px;
+    padding-bottom: 90px;
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .gallery-item {
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gallery-item__media {
+    position: relative;
+    height: 240px;
+    border-bottom: var(--border);
+  }
+
+  .gallery-item__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  figcaption {
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .gallery__note {
+    margin-top: 34px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+</style>

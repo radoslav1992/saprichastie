@@ -1,0 +1,14 @@
+---
+import { type Lang, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<button type="button" class="read-btn" aria-label={t.a11y.readSection} aria-pressed="false" data-noprint>
+  <span aria-hidden="true">▶</span>
+</button>

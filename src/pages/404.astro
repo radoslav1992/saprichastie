@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { useTranslations, localizePath } from '../i18n';
+
+const t = useTranslations('bg');
+---
+
+<Base lang="bg" path="/404" title={t.notFound.metaTitle}>
+  <div class="not-found container">
+    <p class="not-found__code display" aria-hidden="true">404</p>
+    <h1 class="display">{t.notFound.title}</h1>
+    <p class="not-found__text">{t.notFound.text}</p>
+    <a href={localizePath('bg', '/')} class="btn btn--solid">{t.notFound.home}</a>
+  </div>
+</Base>
+
+<style>
+  .not-found {
+    padding: 100px 28px 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .not-found__code {
+    font-size: clamp(80px, 12vw, 160px);
+    color: var(--muted-2);
+  }
+
+  .not-found h1 {
+    font-size: clamp(34px, 4vw, 56px);
+  }
+
+  .not-found__text {
+    font-size: 21px;
+    line-height: 1.6;
+    max-width: 50ch;
+  }
+</style>

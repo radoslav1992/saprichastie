@@ -1,0 +1,246 @@
+---
+import { Image } from 'astro:assets';
+import logoBlack from '../assets/logo-black.png';
+import logoWhite from '../assets/logo-white.png';
+import { type Lang, useTranslations, localizePath, alternatePath } from '../i18n';
+import A11yPanel from './A11yPanel.astro';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const t = useTranslations(lang);
+
+const navItems = [
+  { href: '/', label: t.nav.home },
+  { href: '/about', label: t.nav.about },
+  { href: '/services', label: t.nav.services },
+  { href: '/activities', label: t.nav.activities },
+  { href: '/gallery', label: t.nav.gallery },
+  { href: '/contact', label: t.nav.contacts },
+];
+---
+
+<header data-noprint>
+  <div class="header-bar">
+    <a href={localizePath(lang, '/')} class="brand">
+      <span class="brand__logo">
+        <Image
+          src={logoBlack}
+          alt={t.header.logoAlt}
+          width={96}
+          height={96}
+          densities={[1, 2]}
+          class="logo--light"
+        />
+        <Image
+          src={logoWhite}
+          alt={t.header.logoAlt}
+          width={96}
+          height={96}
+          densities={[1, 2]}
+          class="logo--dark-only"
+        />
+      </span>
+      <span class="brand__text">
+        <span class="brand__name">{t.header.orgName}</span>
+        <span class="brand__place">{t.header.orgPlace}</span>
+      </span>
+    </a>
+
+    <nav aria-label={t.header.navLabel}>
+      {
+        navItems.map((item) => (
+          <a
+            href={localizePath(lang, item.href)}
+            class="nav-link"
+            aria-current={item.href === path ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header-tools">
+      <button
+        type="button"
+        class="a11y-toggle"
+        aria-label={t.header.a11yButtonLabel}
+        aria-expanded="false"
+        aria-controls="a11y-panel"
+        data-a11y-toggle
+      >
+        <span aria-hidden="true" class="a11y-toggle__icon">◐</span>
+        <span>{t.header.a11yButton}</span>
+      </button>
+      <a
+        href={alternatePath(lang, path)}
+        class="lang-switch"
+        lang={lang === 'bg' ? 'en' : 'bg'}
+        aria-label={t.header.langButtonLabel}
+      >
+        {t.header.langButtonShort}
+      </a>
+    </div>
+  </div>
+
+  <A11yPanel lang={lang} />
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--bg);
+    border-bottom: var(--border);
+  }
+
+  .header-bar {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .brand:hover {
+    background: none;
+    color: inherit;
+  }
+
+  .brand__logo {
+    width: 52px;
+    height: 52px;
+    flex: none;
+    display: grid;
+    place-items: center;
+  }
+
+  .brand__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .brand__name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .brand__place {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+
+  nav {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .nav-link:hover {
+    background: var(--lavender);
+    color: inherit;
+  }
+
+  .nav-link[aria-current='page'] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .header-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .a11y-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border: var(--border);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .a11y-toggle:hover,
+  .a11y-toggle[aria-expanded='true'] {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .a11y-toggle__icon {
+    font-size: 17px;
+  }
+
+  .lang-switch {
+    padding: 10px 14px;
+    background: none;
+    border: var(--border);
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 15px;
+    min-width: 64px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lang-switch:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  @media (max-width: 1000px) {
+    .header-bar {
+      flex-wrap: wrap;
+      row-gap: 12px;
+    }
+
+    nav {
+      order: 3;
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>

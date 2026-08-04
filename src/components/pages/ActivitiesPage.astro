@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import outdoorPhoto from '../../assets/photos/urban-orientation.jpg';
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations, localizePath } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const a = t.activities;
+
+const toc = [
+  { href: '#rabotilnici', label: a.toc.workshops },
+  { href: '#sabitia', label: a.toc.events },
+  { href: '#otkrito', label: a.toc.outdoors },
+  { href: '#predstoyashti', label: a.toc.upcoming },
+];
+---
+
+<Base lang={lang} path="/activities" title={a.metaTitle} description={a.intro}>
+  <div class="page-head">
+    <div class="page-head__inner">
+      <span class="eyebrow">{a.eyebrow}</span>
+      <h1>{a.title}</h1>
+      <p class="intro">{a.intro}</p>
+    </div>
+  </div>
+
+  <div class="rail">
+    <nav aria-label={a.onThisPage} class="rail__nav" data-noprint>
+      <span class="rail__nav-label">{a.onThisPage}</span>
+      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="rail__content activities-content">
+      <section id="rabotilnici" data-read class="card block">
+        <h2>{a.workshops.title}</h2>
+        <p class="block__text">{a.workshops.text}</p>
+        <h3 class="list-title">{a.workshops.listTitle}</h3>
+        <ul class="dash-list dash-list--grid dash-list--tight">
+          {a.workshops.list.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="block__text block__outro">{a.workshops.outro}</p>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="sabitia" data-read class="accent-panel block">
+        <h2>{a.events.title}</h2>
+        <p class="block__text">{a.events.text}</p>
+        <h3 class="list-title">{a.events.listTitle}</h3>
+        <ul class="dash-list dash-list--grid">
+          {a.events.list.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="block__text block__outro">{a.events.outro}</p>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="otkrito" data-read class="card outdoor-split">
+        <div class="outdoor-split__copy">
+          <h2>{a.outdoors.title}</h2>
+          <p class="block__text">{a.outdoors.text}</p>
+          <h3 class="list-title">{a.outdoors.listTitle}</h3>
+          <ul class="dash-list">
+            {a.outdoors.list.map((item) => <li>{item}</li>)}
+          </ul>
+          <p class="block__text block__outro">{a.outdoors.outro}</p>
+        </div>
+        <div class="outdoor-split__media">
+          <Image
+            src={outdoorPhoto}
+            alt={a.outdoors.imageAlt}
+            widths={[480, 800, 1080]}
+            sizes="(max-width: 1100px) 100vw, 40vw"
+          />
+        </div>
+        <ReadButton lang={lang} />
+      </section>
+
+      <section id="predstoyashti" data-read class="ink-panel upcoming">
+        <h2>{a.upcoming.title}</h2>
+        <p class="block__text">{a.upcoming.p1}</p>
+        <p class="block__text">{a.upcoming.p2}</p>
+        <a href={localizePath(lang, '/contact')} class="btn btn--sm btn--accent btn--accent-on-ink upcoming__cta">
+          {a.upcoming.cta}
+        </a>
+        <ReadButton lang={lang} />
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .activities-content {
+    gap: 26px;
+  }
+
+  .block {
+    border-radius: var(--radius-panel);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .block h2,
+  .outdoor-split h2,
+  .upcoming h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  .block__text {
+    font-size: 20px;
+    line-height: 1.6;
+    max-width: 66ch;
+  }
+
+  .block__outro {
+    margin-top: 6px;
+  }
+
+  .list-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-top: 6px;
+  }
+
+  .dash-list--tight {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .outdoor-split {
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .outdoor-split__copy {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .outdoor-split__media {
+    position: relative;
+    min-height: 360px;
+    border-left: var(--border);
+  }
+
+  .outdoor-split__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .upcoming {
+    border-radius: var(--radius-panel);
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .upcoming__cta {
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 1100px) {
+    .outdoor-split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .outdoor-split__media {
+      order: 2;
+      min-height: 300px;
+      border-left: 0;
+      border-top: var(--border);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .block,
+    .outdoor-split__copy,
+    .upcoming {
+      padding: 28px;
+    }
+  }
+</style>
