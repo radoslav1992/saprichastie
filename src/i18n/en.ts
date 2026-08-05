@@ -5,7 +5,7 @@ export const en: typeof bg = {
     name: 'Saprichastie — Pazardzhik',
     title: 'Foundation “Saprichastie — Pazardzhik”',
     description:
-      'Foundation “Saprichastie — Pazardzhik” supports people with visual impairments: rehabilitation, psychological help, digital skills, mobility, sport and legal advice — in one place.',
+      'Foundation “Saprichastie — Pazardzhik” has supported people with visual impairments in Pazardzhik, Bulgaria since 2014: rehabilitation, psychological help, training, sport and legal advice.',
   },
   header: {
     orgName: 'Съпричастие',
@@ -86,7 +86,10 @@ export const en: typeof bg = {
       start: 'Home — what we do',
       mission: 'Home — mission',
       stats: 'Home — numbers',
+      faq: 'Home — questions and answers',
     },
+    faqTitle: 'Frequently asked questions',
+    faqAll: 'All questions and answers →',
   },
   faq: {
     metaTitle: 'Frequently asked questions',
@@ -414,6 +417,7 @@ export const en: typeof bg = {
     },
   },
   footer: {
+    updated: 'Last updated:',
     mission: 'Our mission is to support people with visual impairments towards their full inclusion in society.',
     contactTitle: 'Contact',
     addressLine1: '2 Peyo Yavorov St, floor 2',

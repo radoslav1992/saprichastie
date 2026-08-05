@@ -10,6 +10,14 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
+// stamped at build time, i.e. the date of the last deploy
+const updatedDate = new Intl.DateTimeFormat(lang === 'bg' ? 'bg-BG' : 'en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date());
+const updatedIso = new Date().toISOString().slice(0, 10);
+
 const navItems = [
   { href: '/', label: t.nav.home },
   { href: '/about', label: t.nav.about },
@@ -49,7 +57,11 @@ const navItems = [
   </div>
 
   <div class="footer-bottom">
-    <p>{t.footer.copyright}</p>
+    <p>
+      {t.footer.copyright}
+      <br />
+      {t.footer.updated} <time datetime={updatedIso}>{updatedDate}</time>
+    </p>
     <p class="footer-bottom__note">{t.footer.a11yNote}</p>
   </div>
 </footer>
