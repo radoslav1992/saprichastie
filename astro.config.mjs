@@ -12,6 +12,8 @@ export default defineConfig({
   }),
   integrations: [
     sitemap({
+      // keep utility pages (form results, 404) out of search results
+      filter: (page) => !/\/contact\/(sent|error)\/$|\/404\/?$/.test(page),
       i18n: {
         defaultLocale: 'bg',
         locales: { bg: 'bg', en: 'en' },

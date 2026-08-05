@@ -3,14 +3,20 @@ import Base from '../layouts/Base.astro';
 import { useTranslations, localizePath } from '../i18n';
 
 const t = useTranslations('bg');
+const en = useTranslations('en');
 ---
 
-<Base lang="bg" path="/404" title={t.notFound.metaTitle}>
+<Base lang="bg" path="/404" title={t.notFound.metaTitle} noindex>
   <div class="not-found container">
     <p class="not-found__code display" aria-hidden="true">404</p>
     <h1 class="display">{t.notFound.title}</h1>
     <p class="not-found__text">{t.notFound.text}</p>
     <a href={localizePath('bg', '/')} class="btn btn--solid">{t.notFound.home}</a>
+    <div class="not-found__en" lang="en">
+      <h2 class="display">{en.notFound.title}</h2>
+      <p class="not-found__text">{en.notFound.text}</p>
+      <a href={localizePath('en', '/')} class="btn btn--outline">{en.notFound.home}</a>
+    </div>
   </div>
 </Base>
 
@@ -36,5 +42,19 @@ const t = useTranslations('bg');
     font-size: 21px;
     line-height: 1.6;
     max-width: 50ch;
+  }
+
+  .not-found__en {
+    margin-top: 24px;
+    padding-top: 32px;
+    border-top: 2px solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .not-found__en h2 {
+    font-size: clamp(24px, 3vw, 36px);
   }
 </style>

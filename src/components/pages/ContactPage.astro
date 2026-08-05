@@ -81,7 +81,9 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
           <label for="f-msg">{c.formMessage}</label>
           <textarea id="f-msg" name="message" rows="6" required maxlength="5000"></textarea>
         </div>
-        <button type="submit" class="submit-btn">{c.formSubmit}</button>
+        <button type="submit" class="submit-btn" data-sending-label={c.formSending}>
+          {c.formSubmit}
+        </button>
         <p class="muted form-note">{c.formNote}</p>
       </form>
 
