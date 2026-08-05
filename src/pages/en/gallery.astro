@@ -1,5 +1,10 @@
 ---
 import GalleryPage from '../../components/pages/GalleryPage.astro';
+import { loadGalleryItems } from '../../lib/gallery';
+
+export const prerender = false;
+
+const items = await loadGalleryItems(Astro.locals.runtime?.env);
 ---
 
-<GalleryPage lang="en" />
+<GalleryPage lang="en" items={items} />

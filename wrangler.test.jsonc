@@ -1,0 +1,20 @@
+// Local-only config for testing the admin panel with simulated KV/R2.
+// Not used in production — deleted after testing.
+{
+  "name": "saprichastie",
+  "compatibility_date": "2025-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./dist/_worker.js/index.js",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "send_email": [{ "name": "CONTACT_EMAIL" }],
+  "vars": {
+    "CONTACT_FROM": "website@saprichastie.org",
+    "CONTACT_TO": "info@saprichastie.org",
+    "ADMIN_PASSWORD": "test-password-123"
+  },
+  "kv_namespaces": [{ "binding": "GALLERY_KV", "id": "local-test" }],
+  "r2_buckets": [{ "binding": "GALLERY_BUCKET", "bucket_name": "local-test" }]
+}

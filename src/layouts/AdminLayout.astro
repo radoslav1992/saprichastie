@@ -1,0 +1,104 @@
+---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/commissioner';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  /** Show the top bar with the logout button (hidden on the login page). */
+  authed?: boolean;
+}
+
+const { title, authed = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Админ · Съпричастие</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="admin-bar" data-noprint>
+      <span class="admin-bar__title">Съпричастие · Админ панел</span>
+      {
+        authed && (
+          <nav class="admin-bar__nav">
+            <a href="/gallery" class="admin-bar__link">Към сайта</a>
+            <form method="POST" action="/admin/logout">
+              <button type="submit" class="admin-bar__logout">Изход</button>
+            </form>
+          </nav>
+        )
+      }
+    </header>
+    <main class="admin-main">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  .admin-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .admin-bar__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .admin-bar__nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .admin-bar__link {
+    color: var(--bg);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .admin-bar__link:hover {
+    color: var(--accent);
+    background: none;
+  }
+
+  .admin-bar__logout {
+    padding: 8px 18px;
+    background: none;
+    color: var(--bg);
+    border: 2px solid var(--bg);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .admin-bar__logout:hover {
+    background: var(--accent);
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .admin-main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 28px 90px;
+  }
+</style>

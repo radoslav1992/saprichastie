@@ -74,11 +74,41 @@ The contact form sends submissions as email through
 To route to a different mailbox later, change `CONTACT_TO` (and verify the
 new address in Email Routing), then redeploy.
 
-## Gallery
+## Gallery & admin panel
 
-Photos live in `src/assets/photos/` and are listed (with captions in both
-languages) in the `gallery.items` arrays in `src/i18n/bg.ts` /
-`src/i18n/en.ts`. To add a photo: drop the file into `src/assets/photos/`,
-import it and add it to the `photos` map in
-`src/components/pages/GalleryPage.astro`, and add a caption entry per
-language.
+The gallery has two modes:
+
+- **Built-in photos** (default): the set in `src/assets/photos/`, captions in
+  the `gallery.items` arrays of `src/i18n/bg.ts` / `src/i18n/en.ts`.
+- **Admin-managed photos**: once the admin panel is configured and has at
+  least one photo, the public gallery shows the admin-managed set instead.
+  Images are stored in Cloudflare R2, captions and ordering in Workers KV.
+
+### Admin panel setup (one-time)
+
+The panel lives at `/admin` (password login, Bulgarian UI). It stays dormant
+— and deploys keep working — until you configure it:
+
+1. Create the KV namespace and R2 bucket:
+
+   ```sh
+   npx wrangler kv namespace create GALLERY_KV   # prints an id
+   npx wrangler r2 bucket create saprichastie-gallery
+   ```
+
+2. In `wrangler.jsonc`, uncomment the `kv_namespaces` / `r2_buckets` block
+   and paste the KV id from step 1.
+
+3. Set the admin password:
+
+   ```sh
+   npx wrangler secret put ADMIN_PASSWORD
+   ```
+
+4. Deploy (push to `main` or `npm run deploy`).
+
+Then open `https://saprichastie.org/admin`, log in, and either upload photos
+or click "Импортирай вградените снимки" to copy the built-in photos into the
+managed gallery so you can edit captions, reorder (↑/↓) and delete them.
+Uploads accept JPEG/PNG/WebP up to 8 MB; every photo has a Bulgarian and an
+English caption (used as alt text for screen readers).

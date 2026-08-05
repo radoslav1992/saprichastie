@@ -13,12 +13,15 @@ import kindnessMessage from '../../assets/photos/kindness-message.jpg';
 import Base from '../../layouts/Base.astro';
 import ReadButton from '../ReadButton.astro';
 import { type Lang, useTranslations } from '../../i18n';
+import type { GalleryItem } from '../../lib/gallery';
 
 interface Props {
   lang: Lang;
+  /** Admin-managed photos; null falls back to the built-in set below. */
+  items?: GalleryItem[] | null;
 }
 
-const { lang } = Astro.props;
+const { lang, items = null } = Astro.props;
 const t = useTranslations(lang);
 const g = t.gallery;
 
@@ -47,19 +50,31 @@ const photos: Record<string, ImageMetadata> = {
   <section data-read class="container gallery">
     <div class="gallery__grid">
       {
-        g.items.map((item) => (
-          <figure class="card gallery-item">
-            <div class="gallery-item__media">
-              <Image
-                src={photos[item.key]}
-                alt={item.caption}
-                widths={[420, 720, 1080]}
-                sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 400px"
-              />
-            </div>
-            <figcaption>{item.caption}</figcaption>
-          </figure>
-        ))
+        items
+          ? items.map((item) => {
+              const caption = lang === 'bg' ? item.captionBg : item.captionEn;
+              return (
+                <figure class="card gallery-item">
+                  <div class="gallery-item__media">
+                    <img src={`/media/${item.key}`} alt={caption} loading="lazy" decoding="async" />
+                  </div>
+                  <figcaption>{caption}</figcaption>
+                </figure>
+              );
+            })
+          : g.items.map((item) => (
+              <figure class="card gallery-item">
+                <div class="gallery-item__media">
+                  <Image
+                    src={photos[item.key]}
+                    alt={item.caption}
+                    widths={[420, 720, 1080]}
+                    sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 400px"
+                  />
+                </div>
+                <figcaption>{item.caption}</figcaption>
+              </figure>
+            ))
       }
     </div>
     <p class="muted gallery__note">
