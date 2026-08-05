@@ -20,8 +20,17 @@ export const COOKIE_OPTIONS = {
 
 const encoder = new TextEncoder();
 
+/*
+ * Secrets pasted into the dashboard easily pick up an invisible trailing
+ * newline or space, so leading/trailing whitespace is ignored on both the
+ * stored secret and the typed password.
+ */
+function norm(secret: string): string {
+  return secret.trim();
+}
+
 async function hmacKey(secret: string): Promise<CryptoKey> {
-  return crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, [
+  return crypto.subtle.importKey('raw', encoder.encode(norm(secret)), { name: 'HMAC', hash: 'SHA-256' }, false, [
     'sign',
     'verify',
   ]);
@@ -52,8 +61,8 @@ export async function verifySessionToken(token: string | undefined, password: st
 /** Constant-time password check (compares SHA-256 digests). */
 export async function passwordMatches(input: string, expected: string): Promise<boolean> {
   const [a, b] = await Promise.all([
-    crypto.subtle.digest('SHA-256', encoder.encode(input)),
-    crypto.subtle.digest('SHA-256', encoder.encode(expected)),
+    crypto.subtle.digest('SHA-256', encoder.encode(norm(input))),
+    crypto.subtle.digest('SHA-256', encoder.encode(norm(expected))),
   ]);
   const va = new Uint8Array(a);
   const vb = new Uint8Array(b);
