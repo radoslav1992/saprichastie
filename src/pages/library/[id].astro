@@ -1,0 +1,12 @@
+---
+import BookPage from '../../components/pages/BookPage.astro';
+import { fetchArchiveItem, isValidIdentifier } from '../../lib/archive';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const item = isValidIdentifier(id) ? await fetchArchiveItem(Astro.locals.runtime?.env, id) : null;
+if (!item) Astro.response.status = 404;
+---
+
+<BookPage lang="bg" id={id} item={item} />

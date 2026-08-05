@@ -1,0 +1,305 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations, localizePath } from '../../i18n';
+import {
+  archiveBase,
+  searchBulgarianBooks,
+  type ArchiveMediaType,
+  type ArchiveSearchResult,
+} from '../../lib/archive';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const l = t.library;
+
+const env = Astro.locals.runtime?.env;
+const query = Astro.url.searchParams.get('q') ?? '';
+const mediatype: ArchiveMediaType = Astro.url.searchParams.get('type') === 'audio' ? 'audio' : 'texts';
+const page = Math.max(parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1, 1);
+
+const result: ArchiveSearchResult | null = await searchBulgarianBooks(env, { query, mediatype, page });
+
+const base = localizePath(lang, '/library');
+const pageUrl = (p: number, type: ArchiveMediaType = mediatype) => {
+  const params = new URLSearchParams();
+  if (query) params.set('q', query);
+  if (type !== 'texts') params.set('type', type);
+  if (p > 1) params.set('page', String(p));
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+};
+const coverBase = `${archiveBase(env)}/services/img`;
+---
+
+<Base lang={lang} path="/library" title={l.metaTitle} description={l.intro}>
+  <div class="page-head">
+    <div class="page-head__inner" data-read>
+      <span class="eyebrow">{l.eyebrow}</span>
+      <h1>{l.title}</h1>
+      <p class="intro">{l.intro}</p>
+      <p class="source muted">
+        {l.source}
+        <a href="https://archive.org" rel="noopener">Internet Archive</a>.
+      </p>
+      <ReadButton lang={lang} />
+    </div>
+  </div>
+
+  <section class="container library">
+    <form method="GET" action={base} class="search-bar" role="search">
+      {mediatype !== 'texts' && <input type="hidden" name="type" value={mediatype} />}
+      <label for="lib-q" class="search-bar__label">{l.searchLabel}</label>
+      <div class="search-bar__row">
+        <input
+          id="lib-q"
+          type="search"
+          name="q"
+          value={query}
+          placeholder={l.searchPlaceholder}
+          maxlength="100"
+        />
+        <button type="submit" class="btn btn--solid search-bar__btn">{l.searchButton}</button>
+      </div>
+    </form>
+
+    <div class="type-tabs">
+      <a href={pageUrl(1, 'texts')} class="type-tab" aria-current={mediatype === 'texts' ? 'page' : undefined}>
+        {l.typeTexts}
+      </a>
+      <a href={pageUrl(1, 'audio')} class="type-tab" aria-current={mediatype === 'audio' ? 'page' : undefined}>
+        {l.typeAudio}
+      </a>
+      {
+        result && (
+          <span class="muted type-tabs__count">
+            {result.total.toLocaleString(lang === 'bg' ? 'bg-BG' : 'en-GB')} {l.resultsFound}
+          </span>
+        )
+      }
+    </div>
+
+    {!result && <p class="notice card">{l.error}</p>}
+    {result && result.docs.length === 0 && <p class="notice card">{l.noResults}</p>}
+
+    {
+      result && result.docs.length > 0 && (
+        <ul class="book-grid">
+          {result.docs.map((doc) => (
+            <li>
+              <a href={localizePath(lang, `/library/${doc.identifier}`)} class="card book-card">
+                <span class="book-card__cover">
+                  <img
+                    src={`${coverBase}/${doc.identifier}`}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+                <span class="book-card__body">
+                  <span class="book-card__title">{doc.title}</span>
+                  {doc.creator && <span class="book-card__meta">{doc.creator}</span>}
+                  {doc.year && <span class="book-card__meta muted">{doc.year}</span>}
+                  <span class="book-card__open">{l.open}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      result && result.pages > 1 && (
+        <nav class="pager" aria-label={l.pageWord}>
+          {result.page > 1 ? (
+            <a href={pageUrl(result.page - 1)} class="btn btn--outline btn--sm">{l.prev}</a>
+          ) : (
+            <span />
+          )}
+          <span class="pager__info">
+            {l.pageWord} {result.page} / {result.pages}
+          </span>
+          {result.page < result.pages ? (
+            <a href={pageUrl(result.page + 1)} class="btn btn--outline btn--sm">{l.next}</a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .page-head__inner {
+    position: relative;
+  }
+
+  .source {
+    font-size: 17px;
+  }
+
+  .library {
+    padding-top: 44px;
+    padding-bottom: 90px;
+  }
+
+  .search-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 26px;
+    max-width: 640px;
+  }
+
+  .search-bar__label {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .search-bar__row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .search-bar__row input {
+    flex: 1;
+    min-width: 220px;
+    padding: 16px;
+    font-size: 19px;
+    font-family: inherit;
+    color: inherit;
+    border: var(--border);
+    border-radius: var(--radius-input);
+    background: var(--surface);
+  }
+
+  .search-bar__btn {
+    padding: 14px 30px;
+    font-size: 18px;
+  }
+
+  .type-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .type-tab {
+    padding: 10px 22px;
+    border: var(--border);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    color: inherit;
+    background: none;
+  }
+
+  .type-tab:hover {
+    background: var(--lavender);
+    color: inherit;
+  }
+
+  .type-tab[aria-current='page'] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .type-tabs__count {
+    font-size: 16px;
+    margin-left: 6px;
+  }
+
+  .notice {
+    padding: 26px 30px;
+    font-size: 19px;
+    line-height: 1.6;
+    max-width: 62ch;
+  }
+
+  .book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .book-card:hover {
+    background: var(--accent);
+    color: inherit;
+  }
+
+  .book-card__cover {
+    display: block;
+    height: 200px;
+    border-bottom: var(--border);
+    background: var(--lavender);
+  }
+
+  .book-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .book-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px;
+    flex: 1;
+  }
+
+  .book-card__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+
+  .book-card__meta {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .book-card__open {
+    margin-top: auto;
+    padding-top: 12px;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .pager {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .pager__info {
+    font-weight: 700;
+    font-size: 17px;
+  }
+</style>
