@@ -82,9 +82,12 @@ volunteers), hosted on the [Internet Archive](https://archive.org). The
 page queries the public `advancedsearch` API at request time (cached at
 the edge for an hour), restricted to `collection:librivoxaudio`, with
 full-text search and pagination. Each title opens
-`/library/<identifier>`, which embeds the Internet Archive's audio
-player iframe so visitors can listen without leaving the site. No
-configuration or API key is required.
+`/library/<identifier>`, which plays the chapters in the site's own
+player — a native `<audio>` element (64 kbps MP3 files streamed straight
+from archive.org) with a chapter list, previous/next buttons,
+auto-advance and lock-screen (Media Session) controls. Without
+JavaScript each chapter link opens its MP3 directly. No configuration
+or API key is required.
 
 ## Gallery & admin panel
 
