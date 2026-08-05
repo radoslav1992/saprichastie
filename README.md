@@ -39,11 +39,21 @@ npx wrangler login
 npm run deploy
 ```
 
-The Worker is configured in `wrangler.jsonc`. The build writes a resolved
-config to `dist/server/wrangler.json` and points `wrangler deploy` at it
-automatically (via `.wrangler/deploy/config.json`), so a plain
-`npm run deploy` is all that's needed. The `SESSION` KV namespace used by
-Astro sessions is provisioned automatically on first deploy.
+There are two Wrangler configs, because Wrangler validates its config before
+running any build step:
+
+- `wrangler.jsonc` — the deploy config. It declares the built Worker
+  (`dist/server/entry.mjs` + `dist/client` assets) and a `build.command`, so a
+  bare `npx wrangler deploy` works from a fresh clone — including on
+  **Cloudflare Workers Builds** (the Git integration).
+- `wrangler.build.jsonc` — read by the Astro adapter during `astro build`
+  (it must not contain `main`). Keep `vars` / `send_email` in sync between
+  the two files.
+
+After a local build, wrangler is redirected (via
+`.wrangler/deploy/config.json`) to the generated `dist/server/wrangler.json`;
+both paths describe the same Worker. The `SESSION` KV namespace used by Astro
+sessions is provisioned automatically on first deploy.
 
 ### Custom domain
 

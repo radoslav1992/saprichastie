@@ -1,26 +1,52 @@
+/**
+ * Deploy config for `wrangler deploy` — including Cloudflare Workers Builds,
+ * where a bare `npx wrangler deploy` must work from a fresh clone.
+ *
+ * Wrangler validates this file before running the custom build below, so it
+ * declares the built Worker layout (main + assets) up front. The Astro build
+ * itself uses wrangler.build.jsonc (see astro.config.mjs) and additionally
+ * emits dist/server/wrangler.json; when that file exists (local `npm run
+ * deploy` after a build), wrangler is redirected to it via
+ * .wrangler/deploy/config.json and this config is ignored. Both paths
+ * describe the same Worker.
+ *
+ * Contact form configuration (keep in sync with wrangler.build.jsonc):
+ *   CONTACT_SENDER    – the "from" address. Must belong to a domain in your
+ *                       Cloudflare account with Email Routing enabled.
+ *   CONTACT_RECIPIENT – where contact form submissions are delivered. Must be
+ *                       a verified destination address in Email Routing (or
+ *                       an address on your Email-Routing-enabled domain that
+ *                       forwards to one).
+ * Optionally lock down the send_email binding with
+ * "allowed_destination_addresses" so the Worker can only email you.
+ */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "saprichastie",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Runs automatically before `wrangler deploy`, so the site is built first.
+  "build": {
+    "command": "npm install && npm run build"
+  },
+  "main": "./dist/server/entry.mjs",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist/client"
+  },
+  // Astro sessions store; provisioned automatically on first deploy.
+  "kv_namespaces": [
+    {
+      "binding": "SESSION"
+    }
+  ],
   "observability": {
     "enabled": true
   },
-  // Contact form configuration.
-  //
-  // CONTACT_SENDER  – the "from" address. Must belong to a domain in your
-  //                   Cloudflare account with Email Routing enabled.
-  // CONTACT_RECIPIENT – where contact form submissions are delivered. Must be
-  //                   a verified destination address in Email Routing (or an
-  //                   address on your Email-Routing-enabled domain that
-  //                   forwards to one).
   "vars": {
     "CONTACT_SENDER": "contact@saprichastie.org",
     "CONTACT_RECIPIENT": "info@saprichastie.org"
   },
-  // Send Email binding used by /api/contact.
-  // Optionally lock it down with "destination_address" or
-  // "allowed_destination_addresses" so the Worker can only email you.
   "send_email": [
     {
       "name": "CONTACT_EMAIL"

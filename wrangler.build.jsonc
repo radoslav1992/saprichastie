@@ -1,0 +1,24 @@
+// Build-time Wrangler config, read by the Astro Cloudflare adapter
+// (see astro.config.mjs). It deliberately has no "main" — the adapter
+// supplies its own Worker entrypoint and writes the final deploy config
+// to dist/server/wrangler.json.
+//
+// Keep "vars" and "send_email" in sync with wrangler.jsonc.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saprichastie",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "CONTACT_SENDER": "contact@saprichastie.org",
+    "CONTACT_RECIPIENT": "info@saprichastie.org"
+  },
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL"
+    }
+  ]
+}

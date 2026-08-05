@@ -9,6 +9,10 @@ export default defineConfig({
   output: 'static',
   adapter: cloudflare({
     imageService: 'compile',
+    // The root wrangler.jsonc declares the *built* Worker (main/assets) so a
+    // bare `npx wrangler deploy` works in CI; the adapter must not read it
+    // before those files exist. It gets its own config instead.
+    configPath: 'wrangler.build.jsonc',
   }),
   integrations: [
     sitemap({
