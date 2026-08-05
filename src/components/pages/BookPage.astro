@@ -1,0 +1,180 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReadButton from '../ReadButton.astro';
+import { type Lang, useTranslations, localizePath } from '../../i18n';
+import { archiveBase, type ArchiveItem } from '../../lib/archive';
+
+interface Props {
+  lang: Lang;
+  id: string | undefined;
+  /** Fetched by the route (which also sets the 404 status when null). */
+  item: ArchiveItem | null;
+}
+
+const { lang, id, item } = Astro.props;
+const t = useTranslations(lang);
+const l = t.library;
+
+const env = Astro.locals.runtime?.env;
+const isAudio = item?.mediatype === 'audio';
+const embedSrc = item ? `${archiveBase(env)}/embed/${item.identifier}` : '';
+const archiveUrl = item ? `https://archive.org/details/${item.identifier}` : '';
+---
+
+<Base
+  lang={lang}
+  path={`/library/${id ?? ''}`}
+  title={item ? item.title : l.notFound}
+  description={item?.description ?? l.intro}
+  noindex={!item}
+>
+  <div class="page-head">
+    <div class="page-head__inner book-head">
+      <p class="book-head__back">
+        <a href={localizePath(lang, '/library')}>{l.back}</a>
+      </p>
+      <span class="eyebrow">{l.eyebrow}</span>
+      <h1 class="book-title">{item ? item.title : l.notFound}</h1>
+      {
+        item && (item.creator || item.year) && (
+          <p class="book-meta">
+            {item.creator && (
+              <span>
+                {l.author}: <strong>{item.creator}</strong>
+              </span>
+            )}
+            {item.year && (
+              <span class="muted">
+                {l.yearWord}: {item.year}
+              </span>
+            )}
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    item && (
+      <section class="container book">
+        <p class="book__hint">{l.listen}</p>
+        <div class:list={['card', 'book__frame', isAudio ? 'book__frame--audio' : 'book__frame--text']}>
+          <iframe
+            src={embedSrc}
+            title={`${l.readerTitle}: ${item.title}`}
+            allow="fullscreen"
+            allowfullscreen
+            loading="lazy"
+          />
+        </div>
+        <p class="book__external">
+          <a href={archiveUrl} rel="noopener">{l.openOnArchive} ↗</a>
+        </p>
+
+        {item.description && (
+          <div class="book__about" data-read>
+            <h2>{l.aboutBook}</h2>
+            <p>{item.description}</p>
+            <ReadButton lang={lang} />
+          </div>
+        )}
+      </section>
+    )
+  }
+  {
+    !item && (
+      <section class="container book">
+        <p class="notice card">{l.notFound}</p>
+        <p class="book__external">
+          <a href={localizePath(lang, '/library')} class="btn btn--solid">{l.back}</a>
+        </p>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .book-head__back {
+    font-size: 17px;
+  }
+
+  .book-head__back a {
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .book-title {
+    overflow-wrap: anywhere;
+  }
+
+  .book-meta {
+    font-size: 19px;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  .book {
+    padding-top: 44px;
+    padding-bottom: 90px;
+  }
+
+  .book__hint {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .book__frame {
+    overflow: hidden;
+    border-radius: var(--radius-panel);
+    background: #000;
+  }
+
+  .book__frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .book__frame--text {
+    height: min(75vh, 640px);
+  }
+
+  .book__frame--audio {
+    height: 380px;
+  }
+
+  .book__external {
+    margin-top: 16px;
+    font-size: 18px;
+  }
+
+  .book__about {
+    margin-top: 40px;
+    max-width: 70ch;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .book__about h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .book__about p {
+    font-size: 19px;
+    line-height: 1.65;
+  }
+
+  .notice {
+    padding: 26px 30px;
+    font-size: 19px;
+    max-width: 62ch;
+    margin-bottom: 20px;
+  }
+</style>

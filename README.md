@@ -74,6 +74,16 @@ The contact form sends submissions as email through
 To route to a different mailbox later, change `CONTACT_TO` (and verify the
 new address in Email Routing), then redeploy.
 
+## Library (Библиотека)
+
+`/library` lists books and audiobooks in Bulgarian from the
+[Internet Archive](https://archive.org): the page queries the public
+`advancedsearch` API at request time (cached at the edge for an hour),
+with full-text search, a texts/audio toggle and pagination. Each title
+opens `/library/<identifier>`, which embeds the Internet Archive's own
+reader/player iframe so visitors can read or listen without leaving the
+site. No configuration or API key is required.
+
 ## Gallery & admin panel
 
 The gallery has two modes:

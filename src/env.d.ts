@@ -49,6 +49,8 @@ interface Env {
   GALLERY_KV?: GalleryKV;
   GALLERY_BUCKET?: GalleryR2;
   ADMIN_PASSWORD?: string;
+  /** Override for the Internet Archive base URL (tests only). */
+  ARCHIVE_BASE?: string;
 }
 
 type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
