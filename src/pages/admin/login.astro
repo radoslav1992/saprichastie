@@ -32,7 +32,16 @@ if (configured && Astro.request.method === 'POST') {
           <h1>Вход в админ панела</h1>
           {error && <p class="login-error" role="alert">Грешна парола. Опитайте отново.</p>}
           <label for="password">Парола</label>
-          <input id="password" name="password" type="password" required autocomplete="current-password" />
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+          />
           <button type="submit">Влез</button>
         </form>
       </div>
