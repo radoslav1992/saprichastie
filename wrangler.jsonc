@@ -38,24 +38,21 @@
       "name": "CONTACT_EMAIL"
     }
   ],
-  /*
-   * Gallery admin panel (/admin) — uncomment after creating the resources
-   * (see README "Admin panel" for the exact commands), then set the admin
-   * password with: npx wrangler secret put ADMIN_PASSWORD
-   *
-   * "kv_namespaces": [
-   *   {
-   *     "binding": "GALLERY_KV",
-   *     "id": "<paste the id printed by: npx wrangler kv namespace create GALLERY_KV>"
-   *   }
-   * ],
-   * "r2_buckets": [
-   *   {
-   *     "binding": "GALLERY_BUCKET",
-   *     "bucket_name": "saprichastie-gallery"
-   *   }
-   * ],
-   */
+  // Gallery admin panel (/admin). The ADMIN_PASSWORD secret is set in the
+  // dashboard (Workers & Pages → saprichastie → Settings → Variables and
+  // Secrets) and persists across deploys.
+  "kv_namespaces": [
+    {
+      "binding": "GALLERY_KV",
+      "id": "563fbe53d1a14304a26a4540ccec7049"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "GALLERY_BUCKET",
+      "bucket_name": "saprichastie-gallery"
+    }
+  ],
   "vars": {
     // Envelope sender: any address on the saprichastie.org domain.
     "CONTACT_FROM": "website@saprichastie.org",
