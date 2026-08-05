@@ -76,13 +76,15 @@ new address in Email Routing), then redeploy.
 
 ## Library (Библиотека)
 
-`/library` lists books and audiobooks in Bulgarian from the
-[Internet Archive](https://archive.org): the page queries the public
-`advancedsearch` API at request time (cached at the edge for an hour),
-with full-text search, a texts/audio toggle and pagination. Each title
-opens `/library/<identifier>`, which embeds the Internet Archive's own
-reader/player iframe so visitors can read or listen without leaving the
-site. No configuration or API key is required.
+`/library` lists Bulgarian-language audiobooks from
+[LibriVox](https://librivox.org) (public-domain works read by
+volunteers), hosted on the [Internet Archive](https://archive.org). The
+page queries the public `advancedsearch` API at request time (cached at
+the edge for an hour), restricted to `collection:librivoxaudio`, with
+full-text search and pagination. Each title opens
+`/library/<identifier>`, which embeds the Internet Archive's audio
+player iframe so visitors can listen without leaving the site. No
+configuration or API key is required.
 
 ## Gallery & admin panel
 

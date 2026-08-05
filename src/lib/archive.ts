@@ -1,10 +1,8 @@
 /**
  * Thin client for the Internet Archive (archive.org) public APIs, used by
- * the Библиотека / Library pages to list Bulgarian-language books and
+ * the Библиотека / Library pages to list Bulgarian-language LibriVox
  * audiobooks. API responses are cached at the Cloudflare edge for an hour.
  */
-
-export type ArchiveMediaType = 'texts' | 'audio';
 
 export interface ArchiveDoc {
   identifier: string;
@@ -26,7 +24,7 @@ export interface ArchiveItem {
   creator?: string;
   year?: string;
   description?: string;
-  mediatype: ArchiveMediaType | string;
+  mediatype: string;
 }
 
 export const PAGE_SIZE = 24;
@@ -66,14 +64,14 @@ function cachedFetch(url: string): Promise<Response> {
   } as RequestInit);
 }
 
-export async function searchBulgarianBooks(
+/** LibriVox audiobooks in Bulgarian, hosted on the Internet Archive. */
+export async function searchLibrivoxBulgarian(
   env: Env | undefined,
-  options: { query?: string; mediatype?: ArchiveMediaType; page?: number }
+  options: { query?: string; page?: number }
 ): Promise<ArchiveSearchResult | null> {
-  const mediatype: ArchiveMediaType = options.mediatype === 'audio' ? 'audio' : 'texts';
   const page = Math.min(Math.max(options.page ?? 1, 1), MAX_PAGES);
 
-  let q = `(language:bul OR language:bulgarian) AND mediatype:${mediatype}`;
+  let q = 'collection:librivoxaudio AND (language:bul OR language:bulgarian)';
   const extra = sanitizeQuery(options.query ?? '');
   if (extra) q += ` AND (${extra})`;
 

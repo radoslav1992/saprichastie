@@ -2,12 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import ReadButton from '../ReadButton.astro';
 import { type Lang, useTranslations, localizePath } from '../../i18n';
-import {
-  archiveBase,
-  searchBulgarianBooks,
-  type ArchiveMediaType,
-  type ArchiveSearchResult,
-} from '../../lib/archive';
+import { archiveBase, searchLibrivoxBulgarian, type ArchiveSearchResult } from '../../lib/archive';
 
 interface Props {
   lang: Lang;
@@ -19,16 +14,14 @@ const l = t.library;
 
 const env = Astro.locals.runtime?.env;
 const query = Astro.url.searchParams.get('q') ?? '';
-const mediatype: ArchiveMediaType = Astro.url.searchParams.get('type') === 'audio' ? 'audio' : 'texts';
 const page = Math.max(parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1, 1);
 
-const result: ArchiveSearchResult | null = await searchBulgarianBooks(env, { query, mediatype, page });
+const result: ArchiveSearchResult | null = await searchLibrivoxBulgarian(env, { query, page });
 
 const base = localizePath(lang, '/library');
-const pageUrl = (p: number, type: ArchiveMediaType = mediatype) => {
+const pageUrl = (p: number) => {
   const params = new URLSearchParams();
   if (query) params.set('q', query);
-  if (type !== 'texts') params.set('type', type);
   if (p > 1) params.set('page', String(p));
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
@@ -44,6 +37,7 @@ const coverBase = `${archiveBase(env)}/services/img`;
       <p class="intro">{l.intro}</p>
       <p class="source muted">
         {l.source}
+        <a href="https://librivox.org" rel="noopener">LibriVox</a> ·
         <a href="https://archive.org" rel="noopener">Internet Archive</a>.
       </p>
       <ReadButton lang={lang} />
@@ -52,7 +46,6 @@ const coverBase = `${archiveBase(env)}/services/img`;
 
   <section class="container library">
     <form method="GET" action={base} class="search-bar" role="search">
-      {mediatype !== 'texts' && <input type="hidden" name="type" value={mediatype} />}
       <label for="lib-q" class="search-bar__label">{l.searchLabel}</label>
       <div class="search-bar__row">
         <input
@@ -67,21 +60,13 @@ const coverBase = `${archiveBase(env)}/services/img`;
       </div>
     </form>
 
-    <div class="type-tabs">
-      <a href={pageUrl(1, 'texts')} class="type-tab" aria-current={mediatype === 'texts' ? 'page' : undefined}>
-        {l.typeTexts}
-      </a>
-      <a href={pageUrl(1, 'audio')} class="type-tab" aria-current={mediatype === 'audio' ? 'page' : undefined}>
-        {l.typeAudio}
-      </a>
-      {
-        result && (
-          <span class="muted type-tabs__count">
-            {result.total.toLocaleString(lang === 'bg' ? 'bg-BG' : 'en-GB')} {l.resultsFound}
-          </span>
-        )
-      }
-    </div>
+    {
+      result && (
+        <p class="muted results-count">
+          {result.total.toLocaleString(lang === 'bg' ? 'bg-BG' : 'en-GB')} {l.resultsFound}
+        </p>
+      )
+    }
 
     {!result && <p class="notice card">{l.error}</p>}
     {result && result.docs.length === 0 && <p class="notice card">{l.noResults}</p>}
@@ -185,38 +170,10 @@ const coverBase = `${archiveBase(env)}/services/img`;
     font-size: 18px;
   }
 
-  .type-tabs {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-  }
-
-  .type-tab {
-    padding: 10px 22px;
-    border: var(--border);
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 16px;
-    text-decoration: none;
-    color: inherit;
-    background: none;
-  }
-
-  .type-tab:hover {
-    background: var(--lavender);
-    color: inherit;
-  }
-
-  .type-tab[aria-current='page'] {
-    background: var(--ink);
-    color: var(--bg);
-  }
-
-  .type-tabs__count {
-    font-size: 16px;
-    margin-left: 6px;
+  .results-count {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 26px;
   }
 
   .notice {
