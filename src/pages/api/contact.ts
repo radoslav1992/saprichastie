@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { Buffer } from 'node:buffer';
 import { createMimeMessage, Mailbox } from 'mimetext';
 
 export const prerender = false;
@@ -100,7 +101,12 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     msg.setRecipient(recipient);
     msg.setHeader('Reply-To', new Mailbox(email));
     msg.setSubject(mailSubject);
-    msg.addMessage({ contentType: 'text/plain', data: body });
+    // base64 keeps the Cyrillic body 7-bit-safe for every receiving MTA
+    msg.addMessage({
+      contentType: 'text/plain',
+      encoding: 'base64',
+      data: Buffer.from(body, 'utf-8').toString('base64'),
+    });
 
     const { EmailMessage } = await import('cloudflare:email');
     await binding.send(new EmailMessage(sender, recipient, msg.asRaw()));
