@@ -38,6 +38,21 @@
       "name": "CONTACT_EMAIL"
     }
   ],
+  // Gallery admin panel (/admin). The ADMIN_PASSWORD secret is set in the
+  // dashboard (Workers & Pages → saprichastie → Settings → Variables and
+  // Secrets) and persists across deploys.
+  "kv_namespaces": [
+    {
+      "binding": "GALLERY_KV",
+      "id": "563fbe53d1a14304a26a4540ccec7049"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "GALLERY_BUCKET",
+      "bucket_name": "saprichastie-gallery"
+    }
+  ],
   "vars": {
     // Envelope sender: any address on the saprichastie.org domain.
     "CONTACT_FROM": "website@saprichastie.org",

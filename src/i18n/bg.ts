@@ -312,6 +312,7 @@ export const bg = {
     formEmail: 'Имейл',
     formMessage: 'Съобщение',
     formSubmit: 'Изпрати',
+    formSending: 'Изпраща се…',
     formNote: 'Може и просто да ни се обадите — отговаряме в работни дни между 9:00 и 17:00.',
     a11yTitle: 'Декларация за достъпност',
     a11yP1:

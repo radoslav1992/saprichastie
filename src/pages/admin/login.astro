@@ -1,0 +1,118 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { adminConfigured } from '../../lib/gallery';
+import { ADMIN_COOKIE, COOKIE_OPTIONS, createSessionToken, passwordMatches, isAdmin } from '../../lib/admin-auth';
+
+export const prerender = false;
+
+const env = Astro.locals.runtime?.env;
+const configured = adminConfigured(env);
+
+if (configured && (await isAdmin(Astro.cookies, env))) {
+  return Astro.redirect('/admin', 303);
+}
+
+let error = false;
+if (configured && Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const password = String(form.get('password') ?? '');
+  if (password && (await passwordMatches(password, env!.ADMIN_PASSWORD!))) {
+    Astro.cookies.set(ADMIN_COOKIE, await createSessionToken(env!.ADMIN_PASSWORD!), COOKIE_OPTIONS);
+    return Astro.redirect('/admin', 303);
+  }
+  error = true;
+}
+---
+
+<AdminLayout title="Вход">
+  {
+    configured ? (
+      <div class="login-wrap">
+        <form method="POST" class="card login-card">
+          <h1>Вход в админ панела</h1>
+          {error && <p class="login-error" role="alert">Грешна парола. Опитайте отново.</p>}
+          <label for="password">Парола</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" />
+          <button type="submit">Влез</button>
+        </form>
+      </div>
+    ) : (
+      <div class="card login-card">
+        <h1>Админ панелът не е настроен</h1>
+        <p class="setup-note">
+          За да работи админ панелът, създайте KV namespace, R2 bucket и парола, и добавете
+          настройките в <code>wrangler.jsonc</code>. Стъпките са описани в раздела
+          „Admin panel" на README файла в хранилището.
+        </p>
+      </div>
+    )
+  }
+</AdminLayout>
+
+<style>
+  .login-wrap {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+  }
+
+  .login-card {
+    padding: 40px;
+    max-width: 460px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .login-card h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .login-error {
+    padding: 12px 16px;
+    background: #ffe3e3;
+    border: 2px solid #b3261e;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .login-card label {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .login-card input {
+    padding: 14px;
+    font-size: 18px;
+    font-family: inherit;
+    border: var(--border);
+    border-radius: var(--radius-input);
+    background: var(--bg);
+  }
+
+  .login-card button {
+    margin-top: 8px;
+    padding: 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border: var(--border);
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .login-card button:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .setup-note {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+</style>

@@ -12,15 +12,36 @@ interface Props {
   path: string;
   title: string;
   description?: string;
+  /** Keep utility pages (form results, 404) out of search indexes. */
+  noindex?: boolean;
 }
 
-const { lang, path, title, description } = Astro.props;
+const { lang, path, title, description, noindex = false } = Astro.props;
 const t = useTranslations(lang);
 const fullTitle = `${t.site.title} · ${title}`;
 const site = Astro.site ?? new URL('https://saprichastie.org');
 const canonical = new URL(localizePath(lang, path), site);
 const altBg = new URL(localizePath('bg', path), site);
 const altEn = new URL(localizePath('en', path), site);
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  name: t.site.title,
+  url: site.href,
+  logo: new URL('/logo.png', site).href,
+  email: t.email,
+  telephone: '+359876773573',
+  foundingDate: '2014',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: t.footer.addressLine1,
+    addressLocality: lang === 'bg' ? 'Пазарджик' : 'Pazardzhik',
+    postalCode: '4400',
+    addressCountry: 'BG',
+  },
+  openingHours: 'Mo-Fr 09:00-17:00',
+};
 ---
 
 <!doctype html>
@@ -38,12 +59,19 @@ const altEn = new URL(localizePath('en', path), site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#241031" />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description ?? t.site.description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL('/og.png', site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.header.logoAlt} />
     <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgLd)} />
     <script is:inline>
       /* Apply saved accessibility settings before first paint. */
       (function () {

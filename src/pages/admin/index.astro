@@ -1,0 +1,277 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { adminConfigured, loadGalleryItems } from '../../lib/gallery';
+import { isAdmin } from '../../lib/admin-auth';
+
+export const prerender = false;
+
+const env = Astro.locals.runtime?.env;
+
+if (!adminConfigured(env) || !(await isAdmin(Astro.cookies, env))) {
+  return Astro.redirect('/admin/login', 303);
+}
+
+const items = (await loadGalleryItems(env)) ?? [];
+const status = Astro.url.searchParams.get('status');
+
+const statusMessages: Record<string, string> = {
+  uploaded: 'Снимката е добавена.',
+  saved: 'Промените са запазени.',
+  deleted: 'Снимката е изтрита.',
+  moved: 'Редът е променен.',
+  seeded: 'Вградените снимки са импортирани.',
+  error: 'Нещо се обърка. Опитайте отново.',
+  toobig: 'Файлът е твърде голям (максимум 8 MB).',
+  badtype: 'Неподдържан файлов формат. Използвайте JPEG, PNG или WebP.',
+};
+const statusText = status ? statusMessages[status] : undefined;
+---
+
+<AdminLayout title="Галерия" authed>
+  <h1 class="page-title">Управление на галерията</h1>
+
+  {
+    statusText && (
+      <p class:list={['status', status === 'error' || status === 'toobig' || status === 'badtype' ? 'status--error' : 'status--ok']} role="status">
+        {statusText}
+      </p>
+    )
+  }
+
+  <section class="card panel">
+    <h2>Добави снимка</h2>
+    <form method="POST" action="/admin/api/upload" enctype="multipart/form-data" class="upload-form">
+      <div class="field">
+        <label for="u-file">Файл (JPEG, PNG или WebP, до 8 MB)</label>
+        <input id="u-file" name="file" type="file" accept="image/jpeg,image/png,image/webp" required />
+      </div>
+      <div class="field">
+        <label for="u-bg">Описание (български)</label>
+        <input id="u-bg" name="captionBg" type="text" required maxlength="300" />
+      </div>
+      <div class="field">
+        <label for="u-en">Описание (английски)</label>
+        <input id="u-en" name="captionEn" type="text" required maxlength="300" />
+      </div>
+      <button type="submit" class="btn-primary">Качи снимката</button>
+    </form>
+  </section>
+
+  {
+    items.length === 0 && (
+      <section class="card panel">
+        <h2>Няма качени снимки</h2>
+        <p class="hint">
+          В момента сайтът показва вградените снимки. Може да ги импортирате тук, за да ги
+          редактирате и допълвате, или направо да качите нови — щом има поне една качена
+          снимка, галерията показва само качените.
+        </p>
+        <form method="POST" action="/admin/api/seed">
+          <button type="submit" class="btn-primary">Импортирай вградените снимки</button>
+        </form>
+      </section>
+    )
+  }
+
+  <section class="items">
+    <h2 class="items__title">Снимки в галерията ({items.length})</h2>
+    {
+      items.map((item, i) => (
+        <article class="card item">
+          <img src={`/media/${item.key}`} alt={item.captionBg} width="220" loading="lazy" class="item__thumb" />
+          <form method="POST" action="/admin/api/item" class="item__form">
+            <input type="hidden" name="id" value={item.id} />
+            <div class="field">
+              <label for={`bg-${item.id}`}>Описание (BG)</label>
+              <input id={`bg-${item.id}`} name="captionBg" type="text" value={item.captionBg} maxlength="300" required />
+            </div>
+            <div class="field">
+              <label for={`en-${item.id}`}>Описание (EN)</label>
+              <input id={`en-${item.id}`} name="captionEn" type="text" value={item.captionEn} maxlength="300" required />
+            </div>
+            <div class="item__actions">
+              <button type="submit" name="_action" value="save" class="btn-primary btn-sm">Запази</button>
+              <button type="submit" name="_action" value="up" class="btn-ghost btn-sm" disabled={i === 0} aria-label="Премести по-напред">↑</button>
+              <button type="submit" name="_action" value="down" class="btn-ghost btn-sm" disabled={i === items.length - 1} aria-label="Премести по-назад">↓</button>
+              <button type="submit" name="_action" value="delete" class="btn-danger btn-sm" onclick="return confirm('Да изтрия ли тази снимка?')">Изтрий</button>
+            </div>
+          </form>
+        </article>
+      ))
+    }
+  </section>
+</AdminLayout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+    margin-bottom: 26px;
+  }
+
+  .status {
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 2px solid;
+    font-weight: 700;
+    margin-bottom: 22px;
+  }
+
+  .status--ok {
+    background: #e8f7d4;
+    border-color: #3d6b00;
+  }
+
+  .status--error {
+    background: #ffe3e3;
+    border-color: #b3261e;
+  }
+
+  .panel {
+    padding: 30px;
+    margin-bottom: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel h2,
+  .items__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .hint {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+
+  .upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .field input {
+    padding: 12px;
+    font-size: 17px;
+    font-family: inherit;
+    border: var(--border);
+    border-radius: var(--radius-input);
+    background: var(--bg);
+  }
+
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 17px;
+    cursor: pointer;
+    align-self: flex-start;
+    padding: 14px 26px;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    border: var(--border);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .btn-ghost {
+    background: none;
+    color: var(--ink);
+    border: var(--border);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--lavender);
+  }
+
+  .btn-ghost:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .btn-danger {
+    background: none;
+    color: #b3261e;
+    border: 2px solid #b3261e;
+  }
+
+  .btn-danger:hover {
+    background: #b3261e;
+    color: #fff;
+  }
+
+  .btn-sm {
+    padding: 10px 18px;
+    font-size: 15px;
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .items__title {
+    margin-bottom: 4px;
+  }
+
+  .item {
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .item__thumb {
+    width: 220px;
+    height: 160px;
+    object-fit: cover;
+    border: var(--border);
+    border-radius: 12px;
+  }
+
+  .item__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .item__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

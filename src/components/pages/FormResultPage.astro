@@ -12,7 +12,7 @@ const t = useTranslations(lang);
 const r = t.contact[kind];
 ---
 
-<Base lang={lang} path={`/contact/${kind}`} title={r.metaTitle}>
+<Base lang={lang} path={`/contact/${kind}`} title={r.metaTitle} noindex>
   <div class="result container">
     <div class:list={['result__panel', kind === 'sent' ? 'accent-panel' : 'card']}>
       <h1 class="display">{r.title}</h1>

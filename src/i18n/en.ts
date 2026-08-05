@@ -314,6 +314,7 @@ export const en: typeof bg = {
     formEmail: 'Email',
     formMessage: 'Message',
     formSubmit: 'Send',
+    formSending: 'Sending…',
     formNote: 'You can also simply call us — we answer on working days between 9:00 and 17:00.',
     a11yTitle: 'Accessibility statement',
     a11yP1:

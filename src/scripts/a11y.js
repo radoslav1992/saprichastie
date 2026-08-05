@@ -158,3 +158,16 @@ const stopBtn = document.querySelector('[data-stop]');
 if (stopBtn) stopBtn.addEventListener('click', stopReading);
 
 window.addEventListener('pagehide', stopReading);
+
+/* ---------------------------------------------------------------- */
+/*  Contact form: prevent double submits                             */
+/* ---------------------------------------------------------------- */
+document.querySelectorAll('form[action="/api/contact"]').forEach((form) => {
+  form.addEventListener('submit', () => {
+    const btn = form.querySelector('button[type="submit"]');
+    if (!btn || btn.disabled) return;
+    btn.disabled = true;
+    btn.setAttribute('aria-disabled', 'true');
+    btn.textContent = btn.getAttribute('data-sending-label') || btn.textContent;
+  });
+});
