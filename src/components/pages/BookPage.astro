@@ -20,6 +20,26 @@ const archiveUrl = item ? `https://archive.org/details/${item.identifier}` : '';
 const coverUrl = item ? `${archiveBase(env)}/services/img/${item.identifier}` : '';
 const tracks = item?.tracks ?? [];
 const totalSeconds = tracks.reduce((sum, track) => sum + (track.seconds ?? 0), 0);
+
+const isoDuration = (s: number) =>
+  `PT${Math.floor(s / 3600)}H${Math.floor((s % 3600) / 60)}M${s % 60}S`;
+const bookLd = item
+  ? [
+      {
+        '@type': 'Audiobook',
+        name: item.title,
+        ...(item.creator ? { author: { '@type': 'Person', name: item.creator } } : {}),
+        inLanguage: 'bg',
+        readBy: { '@type': 'Organization', name: 'LibriVox' },
+        ...(item.description ? { description: item.description } : {}),
+        ...(totalSeconds > 0 ? { duration: isoDuration(totalSeconds) } : {}),
+        image: coverUrl,
+        url: new URL(localizePath(lang, `/library/${item.identifier}`), Astro.site).href,
+        sameAs: archiveUrl,
+        isAccessibleForFree: true,
+      },
+    ]
+  : [];
 ---
 
 <Base
@@ -28,6 +48,7 @@ const totalSeconds = tracks.reduce((sum, track) => sum + (track.seconds ?? 0), 0
   title={item ? item.title : l.notFound}
   description={item?.description ?? l.intro}
   noindex={!item}
+  extraLd={bookLd}
 >
   <div class="page-head">
     <div class="page-head__inner book-head">

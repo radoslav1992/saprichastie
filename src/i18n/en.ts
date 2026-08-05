@@ -26,6 +26,7 @@ export const en: typeof bg = {
     gallery: 'Gallery',
     library: 'Library',
     contacts: 'Contact',
+    faq: 'FAQ',
   },
   a11y: {
     panelLabel: 'Accessibility settings',
@@ -87,8 +88,50 @@ export const en: typeof bg = {
       stats: 'Home — numbers',
     },
   },
+  faq: {
+    metaTitle: 'Frequently asked questions',
+    eyebrow: 'Useful information',
+    title: 'Frequently asked questions',
+    intro: 'Answers to the most common questions about the foundation, our services and how to get support.',
+    items: [
+      {
+        q: 'What is Foundation "Saprichastie — Pazardzhik"?',
+        a: 'A foundation established in 2014 in Pazardzhik, Bulgaria, that supports people with visual impairments and works towards their better integration into society. Its work is centred on a Centre for social rehabilitation and integration.',
+      },
+      {
+        q: 'What services does the Centre for social rehabilitation and integration offer?',
+        a: 'Seven specialised services: social rehabilitation and integration, psychological support, digital literacy, urban orientation, legal and administrative help, sport and physical activity, and training and consulting.',
+      },
+      {
+        q: 'Who are the services for, and how do I start?',
+        a: 'For people with visual impairments and those close to them. Contact us by phone, email or the contact form — we start with an assessment of individual needs and a personalised rehabilitation plan.',
+      },
+      {
+        q: 'Where is the foundation located and how can I reach you?',
+        a: 'At 2 Peyo Yavorov St, floor 2, Pazardzhik 4400, Bulgaria. Phone: +359 876 773 573 (Monday to Friday, 9:00–17:00), email: info@saprichastie.org, or the contact form on this site.',
+      },
+      {
+        q: 'What is the Library section?',
+        a: 'A collection of free audiobooks in Bulgarian from LibriVox — public-domain works read aloud by volunteers. Every title can be listened to right on the site, chapter by chapter.',
+      },
+      {
+        q: 'How is this website accessible to people with visual impairments?',
+        a: 'The site is built to the WCAG guidelines and has an accessibility panel with settings for text size, yellow-on-black contrast, wider text spacing, underlined links and read-aloud for every section. It works with screen readers and keyboard navigation.',
+      },
+      {
+        q: 'What events do you organise?',
+        a: 'We celebrate International White Cane Day (15 October), run World Sight Day awareness campaigns, inclusive exhibitions, creative workshops, fundraising events and adaptive sports such as showdown.',
+      },
+      {
+        q: 'How can I help the foundation?',
+        a: 'Contact us at info@saprichastie.org or +359 876 773 573 — we welcome volunteers and anyone who wants to support our cause. You can also send photographs from our events for the site gallery.',
+      },
+    ],
+  },
   about: {
     metaTitle: 'About us',
+    metaDescription:
+      'Foundation "Saprichastie — Pazardzhik" was established in 2014 and supports people with visual impairments through a Centre for social rehabilitation and integration. History, mission and team.',
     eyebrow: 'Foundation',
     title: 'About us',
     onThisPage: 'On this page',
