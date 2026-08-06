@@ -25,10 +25,25 @@
   <path d="M170 700 v40 M150 720 h40" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
 
   <!-- eye -->
+  <defs>
+    <clipPath id="hero-eye-clip">
+      <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z"></path>
+    </clipPath>
+  </defs>
+  <path d="M150 352 Q360 214 570 352" class="art-line" stroke-width="4" stroke-linecap="round" opacity="0.35"></path>
+  <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z" class="art-fill"></path>
+  <g clip-path="url(#hero-eye-clip)">
+    <circle cx="360" cy="434" r="118" class="art-accent"></circle>
+    <circle cx="360" cy="434" r="86" class="art-ring" stroke-width="3" opacity="0.3"></circle>
+    <circle cx="360" cy="434" r="46" class="art-ink"></circle>
+    <circle cx="396" cy="398" r="15" class="art-light"></circle>
+    <circle cx="326" cy="474" r="8" class="art-light" opacity="0.65"></circle>
+  </g>
   <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z" class="art-line" stroke-width="6" stroke-linejoin="round"></path>
-  <circle cx="360" cy="430" r="104" class="art-accent"></circle>
-  <circle cx="360" cy="430" r="42" class="art-ink"></circle>
-  <circle cx="394" cy="396" r="13" class="art-light"></circle>
+  <!-- lower lashes -->
+  <path d="M250 548 L232 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
+  <path d="M360 542 L360 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
+  <path d="M470 548 L488 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
 
   <!-- braille cell: С (dots 2, 3, 4) -->
   <circle cx="556" cy="636" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
