@@ -505,6 +505,14 @@ html[data-hc='dark'] :focus-visible {
   opacity: 0.92;
 }
 
+.hero-art .art-ink {
+  fill: var(--ink);
+}
+
+.hero-art .art-light {
+  fill: var(--bg);
+}
+
 html[data-hc='dark'] .hero-art .art-line {
   stroke: #fff;
 }
@@ -514,6 +522,14 @@ html[data-hc='dark'] .hero-art .art-accent {
 }
 
 html[data-hc='dark'] .hero-art .art-ray {
+  fill: #fff;
+}
+
+html[data-hc='dark'] .hero-art .art-ink {
+  fill: var(--hc-bg);
+}
+
+html[data-hc='dark'] .hero-art .art-light {
   fill: #fff;
 }
 
