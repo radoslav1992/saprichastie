@@ -1,0 +1,66 @@
+---
+/*
+ * Decorative hero illustration: a radiant sunburst of rounded rays
+ * around a lime eye — the foundation's motif in a warm, organic
+ * minimalist style — plus a braille cell spelling "С" (dots 2-3-4).
+ * Colors follow the high-contrast mode via the classes in global.css.
+ */
+
+const CX = 360;
+const CY = 400;
+const RAY_WIDTH = 42;
+
+// the rays' inner edges follow an ellipse hugging the eye shape
+const A = 195; // horizontal semi-axis
+const B = 120; // vertical semi-axis
+
+// slightly uneven ray lengths give the burst a hand-made feel
+const lengths = [150, 108, 132, 100, 148, 112, 138, 98, 152, 110, 130, 104];
+const rays = lengths.map((len, i) => {
+  const angle = i * 30 + 8;
+  const rad = (angle * Math.PI) / 180;
+  const inner = 1 / Math.sqrt((Math.sin(rad) / A) ** 2 + (Math.cos(rad) / B) ** 2);
+  return { len, angle, inner };
+});
+---
+
+<svg
+  class="hero-art"
+  viewBox="0 0 720 900"
+  preserveAspectRatio="xMidYMid meet"
+  aria-hidden="true"
+  fill="none"
+>
+  <!-- sunburst -->
+  <g>
+    {
+      rays.map(({ len, angle, inner }) => (
+        <rect
+          x={CX - RAY_WIDTH / 2}
+          y={CY - inner - len}
+          width={RAY_WIDTH}
+          height={len}
+          rx={RAY_WIDTH / 2}
+          class="art-ray"
+          transform={`rotate(${angle} ${CX} ${CY})`}
+        />
+      ))
+    }
+    <!-- eye core -->
+    <path d="M212 400 Q360 294 508 400 Q360 506 212 400 Z" class="art-accent"></path>
+    <circle cx="360" cy="400" r="36" class="art-ink"></circle>
+    <circle cx="388" cy="374" r="11" class="art-light"></circle>
+  </g>
+
+  <!-- sparkles -->
+  <path d="M104 170 v44 M82 192 h44" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
+  <path d="M120 760 v34 M103 777 h34" class="art-line" stroke-width="4" stroke-linecap="round" opacity="0.45"></path>
+
+  <!-- braille cell: С (dots 2, 3, 4) -->
+  <circle cx="560" cy="704" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+  <circle cx="560" cy="760" r="16" class="art-accent"></circle>
+  <circle cx="560" cy="816" r="16" class="art-accent"></circle>
+  <circle cx="618" cy="704" r="16" class="art-accent"></circle>
+  <circle cx="618" cy="760" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+  <circle cx="618" cy="816" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+</svg>

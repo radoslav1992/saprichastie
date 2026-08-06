@@ -1,7 +1,52 @@
+# saprichastie.org — welcome, crawlers and AI assistants.
+# LLM-friendly site summary: https://saprichastie.org/llms.txt
+# Note: AI crawler access is also governed by Cloudflare AI Crawl Control;
+# this file allows them deliberately.
+
 User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /admin/
 Disallow: /admin
+
+# AI assistants and their crawlers are explicitly welcome
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
 
 Sitemap: https://saprichastie.org/sitemap-index.xml

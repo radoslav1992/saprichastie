@@ -491,6 +491,53 @@ html[data-hc='dark'] :focus-visible {
   outline-color: var(--hc-fg);
 }
 
+/* hero illustration colors (and their high-contrast variants below) */
+.hero-art .art-line {
+  stroke: var(--bg);
+}
+
+.hero-art .art-accent {
+  fill: var(--accent);
+}
+
+.hero-art .art-ray {
+  fill: var(--bg);
+  opacity: 0.92;
+}
+
+.hero-art .art-ink {
+  fill: var(--ink);
+}
+
+.hero-art .art-light {
+  fill: var(--bg);
+}
+
+html[data-hc='dark'] .hero-art .art-line {
+  stroke: #fff;
+}
+
+html[data-hc='dark'] .hero-art .art-accent {
+  fill: var(--hc-fg);
+}
+
+html[data-hc='dark'] .hero-art .art-ray {
+  fill: #fff;
+}
+
+html[data-hc='dark'] .hero-art .art-ink {
+  fill: var(--hc-bg);
+}
+
+html[data-hc='dark'] .hero-art .art-light {
+  fill: #fff;
+}
+
+html[data-hc='dark'] .hero__media {
+  background: var(--hc-bg) !important;
+  border-color: var(--hc-fg) !important;
+}
+
 /* swap logo variants in high-contrast mode */
 html[data-hc='dark'] .logo--light {
   display: none !important;

@@ -1,0 +1,31 @@
+# Фондация „Съпричастие — Пазарджик“ / Foundation "Saprichastie — Pazardzhik"
+
+> Фондация „Съпричастие — Пазарджик“ (основана 2014 г.) подкрепя хората със зрителни увреждания в Пазарджик, България. Центърът за социална рехабилитация и интеграция предлага седем специализирани услуги: рехабилитация и интеграция, психологическа подкрепа, компютърна грамотност, градско ориентиране, правна и административна помощ, спорт (шоудаун) и обучения. Контакт: ул. Пейо Яворов 2, ет. 2, Пазарджик 4400 · +359 876 773 573 · info@saprichastie.org · Пон–Пет 9:00–17:00.
+
+> Foundation "Saprichastie — Pazardzhik" (est. 2014) supports people with visual impairments in Pazardzhik, Bulgaria. Its Centre for social rehabilitation and integration offers seven specialised services: rehabilitation & integration, psychological support, digital literacy, urban orientation, legal & administrative help, sport (showdown) and training. Contact: 2 Peyo Yavorov St, floor 2, Pazardzhik 4400 · +359 876 773 573 · info@saprichastie.org · Mon–Fri 9:00–17:00.
+
+Сайтът е двуезичен: български на /, английски на /en/. Изграден е по WCAG с
+панел за достъпност (размер на текста, контраст „жълто на черно“, разреден
+текст, подчертани връзки, четене на глас).
+
+## Страници (български)
+
+- [Начало](https://saprichastie.org/): мисия, услуги накратко, контакти
+- [За нас](https://saprichastie.org/about): история от 2014 г., мисия, екип
+- [Услуги](https://saprichastie.org/services): седемте услуги на Центъра за социална рехабилитация и интеграция
+- [Дейности](https://saprichastie.org/activities): работилници, събития (Ден на белия бастун — 15 октомври), дейности на открито
+- [Галерия](https://saprichastie.org/gallery): снимки от дейностите с текстови описания
+- [Библиотека](https://saprichastie.org/library): безплатни аудиокниги на български от LibriVox, слушат се директно в сайта
+- [Контакти](https://saprichastie.org/contact): адрес, телефон, имейл, контактна форма, декларация за достъпност
+- [Често задавани въпроси](https://saprichastie.org/faq): отговори за услугите, достъпа и как да помогнете
+
+## Pages (English)
+
+- [Home](https://saprichastie.org/en/): mission, services overview, contact
+- [About](https://saprichastie.org/en/about): history since 2014, mission, team
+- [Services](https://saprichastie.org/en/services): the Centre's seven specialised services
+- [Activities](https://saprichastie.org/en/activities): workshops, events (White Cane Day — 15 October), outdoor activities
+- [Gallery](https://saprichastie.org/en/gallery): photographs with text descriptions
+- [Library](https://saprichastie.org/en/library): free Bulgarian audiobooks from LibriVox, playable on-site
+- [Contact](https://saprichastie.org/en/contact): address, phone, email, contact form, accessibility statement
+- [FAQ](https://saprichastie.org/en/faq): answers about services, access and how to help

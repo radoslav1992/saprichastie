@@ -14,9 +14,11 @@ interface Props {
   description?: string;
   /** Keep utility pages (form results, 404) out of search indexes. */
   noindex?: boolean;
+  /** Page-specific schema.org objects (FAQPage, Audiobook, …). */
+  extraLd?: Record<string, unknown>[];
 }
 
-const { lang, path, title, description, noindex = false } = Astro.props;
+const { lang, path, title, description, noindex = false, extraLd = [] } = Astro.props;
 const t = useTranslations(lang);
 const fullTitle = `${t.site.title} · ${title}`;
 const site = Astro.site ?? new URL('https://saprichastie.org');
@@ -24,23 +26,57 @@ const canonical = new URL(localizePath(lang, path), site);
 const altBg = new URL(localizePath('bg', path), site);
 const altEn = new URL(localizePath('en', path), site);
 
-const orgLd = {
+/*
+ * schema.org graph: organisation + site + page, with stable @ids so the
+ * pieces reference each other. dateModified is stamped at build time for
+ * prerendered pages (i.e. the date of the last deploy).
+ */
+const dateModified = new Date().toISOString().slice(0, 10);
+const siteLd = {
   '@context': 'https://schema.org',
-  '@type': 'NGO',
-  name: t.site.title,
-  url: site.href,
-  logo: new URL('/logo.png', site).href,
-  email: t.email,
-  telephone: '+359876773573',
-  foundingDate: '2014',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: t.footer.addressLine1,
-    addressLocality: lang === 'bg' ? 'Пазарджик' : 'Pazardzhik',
-    postalCode: '4400',
-    addressCountry: 'BG',
-  },
-  openingHours: 'Mo-Fr 09:00-17:00',
+  '@graph': [
+    {
+      '@type': 'NGO',
+      '@id': new URL('/#organization', site).href,
+      name: t.site.title,
+      url: site.href,
+      logo: new URL('/logo.png', site).href,
+      email: t.email,
+      telephone: '+359876773573',
+      foundingDate: '2014',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: t.footer.addressLine1,
+        addressLocality: lang === 'bg' ? 'Пазарджик' : 'Pazardzhik',
+        postalCode: '4400',
+        addressCountry: 'BG',
+      },
+      areaServed: lang === 'bg' ? 'Пазарджик, България' : 'Pazardzhik, Bulgaria',
+      openingHours: 'Mo-Fr 09:00-17:00',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': new URL('/#website', site).href,
+      name: t.site.title,
+      url: site.href,
+      inLanguage: ['bg', 'en'],
+      publisher: { '@id': new URL('/#organization', site).href },
+    },
+    {
+      '@type': 'WebPage',
+      url: canonical.href,
+      name: fullTitle,
+      description: description ?? t.site.description,
+      inLanguage: lang,
+      isPartOf: { '@id': new URL('/#website', site).href },
+      about: { '@id': new URL('/#organization', site).href },
+      author: { '@id': new URL('/#organization', site).href },
+      publisher: { '@id': new URL('/#organization', site).href },
+      datePublished: '2026-08-04',
+      dateModified,
+    },
+    ...extraLd,
+  ],
 };
 ---
 
@@ -60,6 +96,7 @@ const orgLd = {
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#241031" />
+    <meta name="author" content={t.site.title} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
@@ -71,7 +108,7 @@ const orgLd = {
     <meta property="og:image:alt" content={t.header.logoAlt} />
     <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(siteLd)} />
     <script is:inline>
       /* Apply saved accessibility settings before first paint. */
       (function () {

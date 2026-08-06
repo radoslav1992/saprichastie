@@ -1,7 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import heroPhoto from '../../assets/photos/white-cane-demonstration.jpg';
 import Base from '../../layouts/Base.astro';
+import HeroArt from '../HeroArt.astro';
 import ReadButton from '../ReadButton.astro';
 import { type Lang, useTranslations, localizePath } from '../../i18n';
 
@@ -12,9 +11,20 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const cardLinks = ['/about', '/services', '/gallery'];
+
+/* Q&A on the home page itself, so answer engines find it front and centre. */
+const homeFaq = t.faq.items.slice(0, 4);
+const faqLd = {
+  '@type': 'FAQPage',
+  mainEntity: homeFaq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
 
-<Base lang={lang} path="/" title={t.home.metaTitle}>
+<Base lang={lang} path="/" title={t.home.metaTitle} extraLd={[faqLd]}>
   <section data-read aria-label={t.home.sectionLabels.hero} class="hero rule-bottom">
     <div class="hero__split">
       <div class="hero__copy">
@@ -31,14 +41,7 @@ const cardLinks = ['/about', '/services', '/gallery'];
         </div>
       </div>
       <div class="hero__media">
-        <Image
-          src={heroPhoto}
-          alt={t.home.heroImageAlt}
-          widths={[640, 960, 1440]}
-          sizes="(max-width: 1100px) 100vw, 45vw"
-          loading="eager"
-          fetchpriority="high"
-        />
+        <HeroArt />
       </div>
     </div>
     <ReadButton lang={lang} />
@@ -91,6 +94,22 @@ const cardLinks = ['/about', '/services', '/gallery'];
         ))
       }
     </div>
+    <ReadButton lang={lang} />
+  </section>
+
+  <section data-read aria-label={t.home.sectionLabels.faq} class="home-faq container">
+    <h2 class="display home-faq__title">{t.home.faqTitle}</h2>
+    <div class="home-faq__list">
+      {
+        homeFaq.map((item) => (
+          <article class="card home-faq__item">
+            <h3>{item.q}</h3>
+            <p>{item.a}</p>
+          </article>
+        ))
+      }
+    </div>
+    <a href={localizePath(lang, '/faq')} class="btn btn--outline home-faq__all">{t.home.faqAll}</a>
     <ReadButton lang={lang} />
   </section>
 </Base>
@@ -173,14 +192,16 @@ const cardLinks = ['/about', '/services', '/gallery'];
     background: var(--ink);
     border-left: var(--border);
     min-height: 520px;
+    display: grid;
+    place-items: center;
+    padding: 44px;
+    overflow: hidden;
   }
 
-  .hero__media img {
-    position: absolute;
-    inset: 0;
+  .hero__media :global(svg) {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    max-height: 560px;
   }
 
   .start {
@@ -314,6 +335,43 @@ const cardLinks = ['/about', '/services', '/gallery'];
   .stat__label {
     font-size: 17px;
     line-height: 1.5;
+  }
+
+  .home-faq {
+    padding-bottom: 90px;
+  }
+
+  .home-faq__title {
+    font-size: clamp(30px, 3vw, 44px);
+    letter-spacing: -0.02em;
+    margin-bottom: 34px;
+  }
+
+  .home-faq__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .home-faq__item {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .home-faq__item h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .home-faq__item p {
+    font-size: 18px;
+    line-height: 1.6;
   }
 
   @media (max-width: 1100px) {
