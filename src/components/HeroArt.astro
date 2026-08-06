@@ -1,11 +1,19 @@
 ---
 /*
- * Decorative hero illustration in the site's design language: the eye
- * motif from the foundation's logo, sound-wave arcs (read-aloud) and a
- * braille cell spelling "С" (dots 2-3-4) — cream and lime on the ink
- * panel. Colors follow the high-contrast mode via the classes defined
- * in global.css.
+ * Decorative hero illustration: a radiant sunburst of rounded rays with
+ * a lime core — warm, organic minimalism — plus a braille cell spelling
+ * "С" (dots 2-3-4). Colors follow the high-contrast mode via the
+ * classes defined in global.css.
  */
+
+const CX = 360;
+const CY = 400;
+const INNER = 150;
+const RAY_WIDTH = 42;
+
+// slightly uneven ray lengths give the burst a hand-made feel
+const lengths = [150, 108, 132, 100, 148, 112, 138, 98, 152, 110, 130, 104];
+const rays = lengths.map((len, i) => ({ len, angle: i * 30 + 8 }));
 ---
 
 <svg
@@ -15,41 +23,33 @@
   aria-hidden="true"
   fill="none"
 >
-  <!-- sound waves -->
-  <circle cx="700" cy="90" r="120" class="art-line" stroke-width="3" opacity="0.55"></circle>
-  <circle cx="700" cy="90" r="195" class="art-line" stroke-width="3" opacity="0.35"></circle>
-  <circle cx="700" cy="90" r="270" class="art-line" stroke-width="3" opacity="0.2"></circle>
+  <!-- sunburst -->
+  <g>
+    {
+      rays.map(({ len, angle }) => (
+        <rect
+          x={CX - RAY_WIDTH / 2}
+          y={CY - INNER - len}
+          width={RAY_WIDTH}
+          height={len}
+          rx={RAY_WIDTH / 2}
+          class="art-ray"
+          transform={`rotate(${angle} ${CX} ${CY})`}
+        />
+      ))
+    }
+    <circle cx={CX} cy={CY} r="118" class="art-accent"></circle>
+  </g>
 
   <!-- sparkles -->
-  <path d="M96 150 v44 M74 172 h44" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.7"></path>
-  <path d="M170 700 v40 M150 720 h40" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
-
-  <!-- eye -->
-  <defs>
-    <clipPath id="hero-eye-clip">
-      <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z"></path>
-    </clipPath>
-  </defs>
-  <path d="M150 352 Q360 214 570 352" class="art-line" stroke-width="4" stroke-linecap="round" opacity="0.35"></path>
-  <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z" class="art-fill"></path>
-  <g clip-path="url(#hero-eye-clip)">
-    <circle cx="360" cy="434" r="118" class="art-accent"></circle>
-    <circle cx="360" cy="434" r="86" class="art-ring" stroke-width="3" opacity="0.3"></circle>
-    <circle cx="360" cy="434" r="46" class="art-ink"></circle>
-    <circle cx="396" cy="398" r="15" class="art-light"></circle>
-    <circle cx="326" cy="474" r="8" class="art-light" opacity="0.65"></circle>
-  </g>
-  <path d="M96 430 Q360 240 624 430 Q360 620 96 430 Z" class="art-line" stroke-width="6" stroke-linejoin="round"></path>
-  <!-- lower lashes -->
-  <path d="M250 548 L232 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
-  <path d="M360 542 L360 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
-  <path d="M470 548 L488 586" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.75"></path>
+  <path d="M104 170 v44 M82 192 h44" class="art-line" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
+  <path d="M120 760 v34 M103 777 h34" class="art-line" stroke-width="4" stroke-linecap="round" opacity="0.45"></path>
 
   <!-- braille cell: С (dots 2, 3, 4) -->
-  <circle cx="556" cy="636" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
-  <circle cx="556" cy="692" r="16" class="art-accent"></circle>
-  <circle cx="556" cy="748" r="16" class="art-accent"></circle>
-  <circle cx="614" cy="636" r="16" class="art-accent"></circle>
-  <circle cx="614" cy="692" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
-  <circle cx="614" cy="748" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+  <circle cx="560" cy="704" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+  <circle cx="560" cy="760" r="16" class="art-accent"></circle>
+  <circle cx="560" cy="816" r="16" class="art-accent"></circle>
+  <circle cx="618" cy="704" r="16" class="art-accent"></circle>
+  <circle cx="618" cy="760" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
+  <circle cx="618" cy="816" r="14" class="art-line" stroke-width="3" opacity="0.35"></circle>
 </svg>

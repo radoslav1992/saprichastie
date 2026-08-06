@@ -500,50 +500,21 @@ html[data-hc='dark'] :focus-visible {
   fill: var(--accent);
 }
 
-.hero-art .art-ink {
-  fill: var(--ink);
-}
-
-.hero-art .art-light {
+.hero-art .art-ray {
   fill: var(--bg);
+  opacity: 0.92;
 }
 
-.hero-art .art-fill {
-  fill: var(--bg);
-  opacity: 0.07;
-}
-
-.hero-art .art-ring {
-  fill: none;
-  stroke: var(--ink);
-}
-
-html[data-hc='dark'] .hero-art .art-line,
-html[data-hc='dark'] .hero-art .art-light {
+html[data-hc='dark'] .hero-art .art-line {
   stroke: #fff;
-  fill: none;
-}
-
-html[data-hc='dark'] .hero-art .art-light {
-  fill: #fff;
-  stroke: none;
 }
 
 html[data-hc='dark'] .hero-art .art-accent {
   fill: var(--hc-fg);
 }
 
-html[data-hc='dark'] .hero-art .art-ink {
-  fill: var(--hc-bg);
-}
-
-html[data-hc='dark'] .hero-art .art-fill {
+html[data-hc='dark'] .hero-art .art-ray {
   fill: #fff;
-  opacity: 0.08;
-}
-
-html[data-hc='dark'] .hero-art .art-ring {
-  stroke: var(--hc-bg);
 }
 
 html[data-hc='dark'] .hero__media {
