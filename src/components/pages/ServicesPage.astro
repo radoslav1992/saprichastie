@@ -48,18 +48,24 @@ const smallCards = [
   <div class="rail">
     <nav aria-label={s.onThisPage} class="rail__nav" data-noprint>
       <span class="rail__nav-label">{s.onThisPage}</span>
-      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+      {toc.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
     </nav>
 
     <div class="rail__content services-content">
       <section id="csri" data-read class="card service-split">
         <div class="service-split__copy">
-          <span aria-hidden="true" class="service-num">01</span>
+          <span aria-hidden="true" class="service-num">
+            01
+          </span>
           <h2>{s.csri.title}</h2>
           <p class="service-text">{s.csri.text}</p>
           <h3 class="list-title">{s.csri.listTitle}</h3>
           <ul class="dash-list">
-            {s.csri.list.map((item) => <li>{item}</li>)}
+            {s.csri.list.map((item) => (
+              <li>{item}</li>
+            ))}
           </ul>
         </div>
         <div class="service-split__media service-split__media--right">
@@ -73,7 +79,11 @@ const smallCards = [
         <ReadButton lang={lang} />
       </section>
 
-      <section id="psiho" data-read class="card service-split service-split--media-first">
+      <section
+        id="psiho"
+        data-read
+        class="card service-split service-split--media-first"
+      >
         <div class="service-split__media service-split__media--left">
           <Image
             src={groupSession}
@@ -83,47 +93,55 @@ const smallCards = [
           />
         </div>
         <div class="service-split__copy">
-          <span aria-hidden="true" class="service-num">02</span>
+          <span aria-hidden="true" class="service-num">
+            02
+          </span>
           <h2>{s.psycho.title}</h2>
           <p class="service-text">{s.psycho.text}</p>
           <h3 class="list-title">{s.psycho.listTitle}</h3>
           <ul class="dash-list">
-            {s.psycho.list.map((item) => <li>{item}</li>)}
+            {s.psycho.list.map((item) => (
+              <li>{item}</li>
+            ))}
           </ul>
         </div>
         <ReadButton lang={lang} />
       </section>
 
       <div class="service-cards">
-        {
-          smallCards.map((card) => (
-            <section id={card.id} data-read class="card service-card">
-              <div class="service-card__media">
-                <Image
-                  src={card.image}
-                  alt={card.data.imageAlt}
-                  widths={[420, 720]}
-                  sizes="(max-width: 760px) 100vw, 420px"
-                />
-              </div>
-              <div class="service-card__body">
-                <span aria-hidden="true" class="service-num">{card.num}</span>
-                <h2>{card.data.title}</h2>
-                <p>{card.data.text}</p>
-              </div>
-              <ReadButton lang={lang} />
-            </section>
-          ))
-        }
+        {smallCards.map((card) => (
+          <section id={card.id} data-read class="card service-card">
+            <div class="service-card__media">
+              <Image
+                src={card.image}
+                alt={card.data.imageAlt}
+                widths={[420, 720]}
+                sizes="(max-width: 760px) 100vw, 420px"
+              />
+            </div>
+            <div class="service-card__body">
+              <span aria-hidden="true" class="service-num">
+                {card.num}
+              </span>
+              <h2>{card.data.title}</h2>
+              <p>{card.data.text}</p>
+            </div>
+            <ReadButton lang={lang} />
+          </section>
+        ))}
       </div>
 
       <section id="obuchenia" data-read class="accent-panel training-panel">
-        <span aria-hidden="true" class="service-num service-num--ink">07</span>
+        <span aria-hidden="true" class="service-num service-num--ink">
+          07
+        </span>
         <h2>{s.training.title}</h2>
         <p class="service-text service-text--wide">{s.training.text}</p>
         <h3 class="list-title">{s.training.listTitle}</h3>
         <ul class="dash-list dash-list--grid">
-          {s.training.list.map((item) => <li>{item}</li>)}
+          {s.training.list.map((item) => (
+            <li>{item}</li>
+          ))}
         </ul>
         <ReadButton lang={lang} />
       </section>
@@ -133,7 +151,10 @@ const smallCards = [
           <h2>{s.ctaTitle}</h2>
           <p>{s.ctaText}</p>
         </div>
-        <a href={localizePath(lang, '/contact')} class="btn btn--accent btn--accent-on-ink">
+        <a
+          href={localizePath(lang, '/contact')}
+          class="btn btn--accent btn--accent-on-ink"
+        >
           {s.ctaButton}
         </a>
         <ReadButton lang={lang} />
@@ -150,7 +171,7 @@ const smallCards = [
   .service-num {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 15px;
+    font-size: 0.9375rem;
     color: var(--muted-2);
   }
 
@@ -175,13 +196,13 @@ const smallCards = [
   .service-split h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 30px;
+    font-size: 1.875rem;
     line-height: 1.15;
     letter-spacing: -0.02em;
   }
 
   .service-text {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.6;
   }
 
@@ -190,7 +211,7 @@ const smallCards = [
   }
 
   .list-title {
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-weight: 800;
     margin-top: 6px;
   }
@@ -218,7 +239,7 @@ const smallCards = [
 
   .service-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 26px;
   }
 
@@ -253,12 +274,12 @@ const smallCards = [
   .service-card h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 26px;
+    font-size: 1.625rem;
     letter-spacing: -0.02em;
   }
 
   .service-card p {
-    font-size: 19px;
+    font-size: 1.1875rem;
     line-height: 1.6;
   }
 
@@ -272,7 +293,7 @@ const smallCards = [
   .training-panel h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 30px;
+    font-size: 1.875rem;
     letter-spacing: -0.02em;
   }
 
@@ -296,12 +317,12 @@ const smallCards = [
   .cta-panel h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 32px;
+    font-size: 2rem;
     letter-spacing: -0.02em;
   }
 
   .cta-panel p {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.6;
   }
 

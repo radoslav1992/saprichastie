@@ -34,7 +34,14 @@ const navItems = [
   <div class="footer-main">
     <div class="footer-brand">
       <div class="footer-brand__row">
-        <Image src={logoWhite} alt="" width={88} height={88} densities={[1, 2]} class="footer-logo" />
+        <Image
+          src={logoWhite}
+          alt=""
+          width={88}
+          height={88}
+          densities={[1, 2]}
+          class="footer-logo"
+        />
         <span class="footer-brand__name">{t.site.name}</span>
       </div>
       <p class="footer-mission">{t.footer.mission}</p>
@@ -43,7 +50,8 @@ const navItems = [
     <div class="footer-col">
       <h2>{t.footer.contactTitle}</h2>
       <p class="footer-address">
-        {t.footer.addressLine1}<br />
+        {t.footer.addressLine1}
+        <br />
         {t.footer.addressLine2}
       </p>
       <a href={t.phoneHref}>{t.phone}</a>
@@ -52,7 +60,9 @@ const navItems = [
 
     <nav aria-label={t.footer.navLabel} class="footer-col">
       <h2>{t.footer.pagesTitle}</h2>
-      {navItems.map((item) => <a href={localizePath(lang, item.href)}>{item.label}</a>)}
+      {navItems.map((item) => (
+        <a href={localizePath(lang, item.href)}>{item.label}</a>
+      ))}
     </nav>
   </div>
 
@@ -63,6 +73,9 @@ const navItems = [
       {t.footer.updated} <time datetime={updatedIso}>{updatedDate}</time>
     </p>
     <p class="footer-bottom__note">{t.footer.a11yNote}</p>
+    <a href="/admin" class="admin-link">
+      {lang === 'bg' ? 'Администратор' : 'Administrator'}
+    </a>
   </div>
 </footer>
 
@@ -76,7 +89,7 @@ const navItems = [
   .footer-main {
     max-width: var(--container);
     margin: 0 auto;
-    padding: 70px 28px 34px;
+    padding: 60px 32px 40px;
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
     gap: 48px;
@@ -104,12 +117,12 @@ const navItems = [
   .footer-brand__name {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 19px;
+    font-size: 1.0625rem;
     letter-spacing: -0.02em;
   }
 
   .footer-mission {
-    font-size: 19px;
+    font-size: 1.0625rem;
     line-height: 1.6;
     max-width: 40ch;
     color: var(--footer-text);
@@ -122,21 +135,21 @@ const navItems = [
   }
 
   .footer-col h2 {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 0.875rem;
+    font-weight: 650;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--accent);
   }
 
   .footer-address {
-    font-size: 18px;
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--footer-text);
   }
 
   .footer-col a {
-    font-size: 18px;
+    font-size: 1rem;
     color: var(--footer-text);
     text-decoration: none;
     align-self: flex-start;
@@ -151,7 +164,7 @@ const navItems = [
     max-width: var(--container);
     margin: 0 auto;
     padding: 24px 28px 44px;
-    border-top: 2px solid var(--footer-border);
+    border-top: 1px solid var(--footer-border);
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -159,7 +172,7 @@ const navItems = [
   }
 
   .footer-bottom p {
-    font-size: 16px;
+    font-size: 1rem;
     color: var(--footer-dim);
   }
 
@@ -171,6 +184,25 @@ const navItems = [
     .footer-main {
       grid-template-columns: 1fr;
       gap: 36px;
+    }
+  }
+  .footer-col a {
+    min-height: 30px;
+  }
+  .footer-bottom p {
+    font-size: 0.8125rem;
+  }
+  .admin-link {
+    color: var(--footer-dim);
+    font-size: 0.8125rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  @media (max-width: 600px) {
+    .footer-main,
+    .footer-bottom {
+      padding-inline: 20px;
     }
   }
 </style>

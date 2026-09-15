@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import community from '../../assets/photos/center-group.jpg';
 import Base from '../../layouts/Base.astro';
 import ReadButton from '../ReadButton.astro';
 import { type Lang, useTranslations } from '../../i18n';
@@ -24,23 +26,40 @@ const initials = (name: string) =>
     .join('');
 ---
 
-<Base lang={lang} path="/about" title={t.about.metaTitle} description={t.about.metaDescription}>
+<Base
+  lang={lang}
+  path="/about"
+  title={t.about.metaTitle}
+  description={t.about.metaDescription}
+>
   <div class="page-head">
     <div class="page-head__inner">
       <span class="eyebrow">{t.about.eyebrow}</span>
       <h1>{t.about.title}</h1>
+      <p class="intro">{t.about.missionP1}</p>
     </div>
   </div>
 
   <div class="rail">
     <nav aria-label={t.about.onThisPage} class="rail__nav" data-noprint>
       <span class="rail__nav-label">{t.about.onThisPage}</span>
-      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+      {toc.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
     </nav>
 
     <div class="rail__content about-content">
       <section id="istoria" data-read>
         <h2 class="section-title">{t.about.historyTitle}</h2>
+        <figure class="about-photo">
+          <Image
+            src={community}
+            alt={t.gallery.items[6].caption}
+            widths={[600, 1000]}
+            sizes="(max-width: 1100px) 90vw, 800px"
+          />
+          <figcaption>{t.gallery.items[6].caption}</figcaption>
+        </figure>
         <div class="prose">
           <p>{t.about.historyP1}</p>
           <p>{t.about.historyP2}</p>
@@ -60,20 +79,20 @@ const initials = (name: string) =>
       <section id="ekip" data-read>
         <h2 class="section-title section-title--team">{t.about.teamTitle}</h2>
         <div class="team-grid">
-          {
-            t.about.team.map((member) => (
-              <div class="card team-card">
-                <div class="team-card__head">
-                  <span aria-hidden="true" class="team-card__avatar">{initials(member.name)}</span>
-                  <div class="team-card__id">
-                    <h3>{member.name}</h3>
-                    <p class="team-card__role">{member.role}</p>
-                  </div>
+          {t.about.team.map((member) => (
+            <div class="card team-card">
+              <div class="team-card__head">
+                <span aria-hidden="true" class="team-card__avatar">
+                  {initials(member.name)}
+                </span>
+                <div class="team-card__id">
+                  <h3>{member.name}</h3>
+                  <p class="team-card__role">{member.role}</p>
                 </div>
-                <p class="team-card__text">{member.text}</p>
               </div>
-            ))
-          }
+              <p class="team-card__text">{member.text}</p>
+            </div>
+          ))}
         </div>
         <ReadButton lang={lang} />
       </section>
@@ -89,7 +108,7 @@ const initials = (name: string) =>
   .section-title {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 34px;
+    font-size: 2.125rem;
     letter-spacing: -0.02em;
     margin-bottom: 22px;
   }
@@ -106,7 +125,7 @@ const initials = (name: string) =>
   }
 
   .prose p {
-    font-size: 21px;
+    font-size: 1.3125rem;
     line-height: 1.65;
     text-wrap: pretty;
   }
@@ -121,7 +140,7 @@ const initials = (name: string) =>
 
   .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 20px;
   }
 
@@ -149,7 +168,7 @@ const initials = (name: string) =>
     place-items: center;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   .team-card__id {
@@ -161,24 +180,43 @@ const initials = (name: string) =>
   .team-card h3 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 22px;
+    font-size: 1.375rem;
     letter-spacing: -0.02em;
   }
 
   .team-card__role {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--muted-2);
   }
 
   .team-card__text {
-    font-size: 19px;
+    font-size: 1.1875rem;
     line-height: 1.6;
   }
 
   @media (max-width: 640px) {
     .mission-panel {
       padding: 28px;
+    }
+  }
+  .about-photo {
+    margin-bottom: 30px;
+  }
+  .about-photo img {
+    width: 100%;
+    max-height: 440px;
+    object-fit: cover;
+    border-radius: 18px;
+  }
+  .about-photo figcaption {
+    font-size: 0.875rem;
+    color: var(--muted);
+    padding-top: 10px;
+  }
+  @media (max-width: 600px) {
+    .team-card__head {
+      flex-wrap: wrap;
     }
   }
 </style>

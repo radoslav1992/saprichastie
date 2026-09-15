@@ -16,35 +16,60 @@ const sizes = [
 ];
 ---
 
-<div id="a11y-panel" class="a11y-panel" role="region" aria-label={t.a11y.panelLabel} hidden>
+<div
+  id="a11y-panel"
+  class="a11y-panel"
+  role="region"
+  aria-label={t.a11y.panelLabel}
+  hidden
+>
+  <div class="a11y-panel__head">
+    <h2>{t.a11y.panelLabel}</h2>
+    <div>
+      <button type="button" class="a11y-btn" data-reset>
+        {lang === 'bg' ? 'Нулирай настройките' : 'Reset settings'}
+      </button>
+      <button type="button" class="a11y-btn" data-a11y-close>
+        {lang === 'bg' ? 'Затвори' : 'Close'} <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  </div>
   <div class="a11y-panel__grid">
     <div class="a11y-panel__group">
       <span class="a11y-panel__label">{t.a11y.textSize}</span>
       <div class="a11y-panel__row">
-        {
-          sizes.map((s) => (
-            <button
-              type="button"
-              class="a11y-btn a11y-btn--size"
-              data-fs={s.value}
-              style={`font-size:${s.fontSize}`}
-              aria-pressed={s.value === '100' ? 'true' : 'false'}
-              aria-label={`${t.a11y.textSize} ${s.value}%`}
-            >
-              {s.label}
-            </button>
-          ))
-        }
+        {sizes.map((s) => (
+          <button
+            type="button"
+            class="a11y-btn a11y-btn--size"
+            data-fs={s.value}
+            style={`font-size:${s.fontSize}`}
+            aria-pressed={s.value === '100' ? 'true' : 'false'}
+            aria-label={`${t.a11y.textSize} ${s.value}%`}
+          >
+            {s.label}
+          </button>
+        ))}
       </div>
     </div>
 
     <div class="a11y-panel__group">
       <span class="a11y-panel__label">{t.a11y.contrast}</span>
       <div class="a11y-panel__row">
-        <button type="button" class="a11y-btn" data-hc="off" aria-pressed="true">
+        <button
+          type="button"
+          class="a11y-btn"
+          data-hc="off"
+          aria-pressed="true"
+        >
           {t.a11y.contrastStandard}
         </button>
-        <button type="button" class="a11y-btn a11y-btn--dark" data-hc="dark" aria-pressed="false">
+        <button
+          type="button"
+          class="a11y-btn a11y-btn--dark"
+          data-hc="dark"
+          aria-pressed="false"
+        >
           {t.a11y.contrastDark}
         </button>
       </div>
@@ -53,10 +78,20 @@ const sizes = [
     <div class="a11y-panel__group">
       <span class="a11y-panel__label">{t.a11y.reading}</span>
       <div class="a11y-panel__col">
-        <button type="button" class="a11y-btn a11y-btn--left" data-toggle="space" aria-pressed="false">
+        <button
+          type="button"
+          class="a11y-btn a11y-btn--left"
+          data-toggle="space"
+          aria-pressed="false"
+        >
           {t.a11y.spacedText}
         </button>
-        <button type="button" class="a11y-btn a11y-btn--left" data-toggle="links" aria-pressed="false">
+        <button
+          type="button"
+          class="a11y-btn a11y-btn--left"
+          data-toggle="links"
+          aria-pressed="false"
+        >
           {t.a11y.underlineLinks}
         </button>
       </div>
@@ -75,7 +110,9 @@ const sizes = [
 <style>
   .a11y-panel {
     border-top: var(--border);
-    background: #efe7db;
+    background: var(--lavender);
+    max-height: 75vh;
+    overflow-y: auto;
   }
 
   .a11y-panel__grid {
@@ -83,7 +120,7 @@ const sizes = [
     margin: 0 auto;
     padding: 26px 28px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
     gap: 26px;
   }
 
@@ -94,7 +131,7 @@ const sizes = [
   }
 
   .a11y-panel__label {
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -118,7 +155,7 @@ const sizes = [
     background: var(--bg);
     border-radius: 10px;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 0.9375rem;
     cursor: pointer;
   }
 
@@ -161,7 +198,29 @@ const sizes = [
   }
 
   .a11y-panel__hint {
-    font-size: 15px;
+    font-size: 0.9375rem;
     line-height: 1.5;
+  }
+  .a11y-panel__head {
+    max-width: var(--container);
+    margin: auto;
+    padding: 22px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .a11y-panel__head h2 {
+    font-size: 1.125rem;
+  }
+  .a11y-panel__head > div {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .a11y-panel__head .a11y-btn {
+    flex: auto;
+    padding: 10px 14px;
   }
 </style>

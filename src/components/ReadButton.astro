@@ -1,14 +1,21 @@
 ---
 import { type Lang, useTranslations } from '../i18n';
-
+import Icon from './Icon.astro';
 interface Props {
   lang: Lang;
 }
-
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<button type="button" class="read-btn" aria-label={t.a11y.readSection} aria-pressed="false" data-noprint>
-  <span aria-hidden="true">▶</span>
+<button
+  type="button"
+  class="read-btn"
+  aria-label={t.a11y.readSection}
+  aria-pressed="false"
+  data-noprint
+  hidden
+>
+  <Icon name="headphones" size={17} />
+  <span>{lang === 'bg' ? 'Прочети на глас' : 'Read aloud'}</span>
 </button>
