@@ -1,5 +1,4 @@
 ---
-import '@fontsource-variable/unbounded';
 import '@fontsource-variable/commissioner';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -18,7 +17,14 @@ interface Props {
   extraLd?: Record<string, unknown>[];
 }
 
-const { lang, path, title, description, noindex = false, extraLd = [] } = Astro.props;
+const {
+  lang,
+  path,
+  title,
+  description,
+  noindex = false,
+  extraLd = [],
+} = Astro.props;
 const t = useTranslations(lang);
 const fullTitle = `${t.site.title} · ${title}`;
 const site = Astro.site ?? new URL('https://saprichastie.org');
@@ -51,7 +57,8 @@ const siteLd = {
         postalCode: '4400',
         addressCountry: 'BG',
       },
-      areaServed: lang === 'bg' ? 'Пазарджик, България' : 'Pazardzhik, Bulgaria',
+      areaServed:
+        lang === 'bg' ? 'Пазарджик, България' : 'Pazardzhik, Bulgaria',
       openingHours: 'Mo-Fr 09:00-17:00',
     },
     {
@@ -95,12 +102,15 @@ const siteLd = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#241031" />
+    <meta name="theme-color" content="#183e3b" />
     <meta name="author" content={t.site.title} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description ?? t.site.description} />
+    <meta
+      property="og:description"
+      content={description ?? t.site.description}
+    />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL('/og.png', site)} />
     <meta property="og:image:width" content="1200" />
@@ -108,7 +118,11 @@ const siteLd = {
     <meta property="og:image:alt" content={t.header.logoAlt} />
     <meta property="og:locale" content={lang === 'bg' ? 'bg_BG' : 'en_GB'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(siteLd)} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(siteLd)}
+    ></script>
     <script is:inline>
       /* Apply saved accessibility settings before first paint. */
       (function () {
@@ -125,9 +139,11 @@ const siteLd = {
   </head>
   <body>
     <div data-zoom="1" class="page-shell">
-      <a href="#main" class="skip-link">{t.header.skipLink}</a>
+      <a href="#main" class="skip-link">
+        {t.header.skipLink}
+      </a>
       <Header lang={lang} path={path} />
-      <main id="main">
+      <main id="main" tabindex="-1">
         <slot />
       </main>
       <Footer lang={lang} />

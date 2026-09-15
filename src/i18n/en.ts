@@ -10,7 +10,8 @@ export const en: typeof bg = {
   header: {
     orgName: 'Съпричастие',
     orgPlace: 'Pazardzhik Foundation',
-    logoAlt: 'Logo of Foundation “Saprichastie — Pazardzhik” — a person with a white cane in front of a stylised eye',
+    logoAlt:
+      'Logo of Foundation “Saprichastie — Pazardzhik” — a person with a white cane in front of a stylised eye',
     navLabel: 'Main navigation',
     a11yButton: 'Access',
     a11yButtonLabel: 'Accessibility settings',
@@ -38,11 +39,55 @@ export const en: typeof bg = {
     spacedText: 'Wider letter & line spacing',
     underlineLinks: 'Underline all links',
     readAloud: 'Read aloud',
-    readAloudHint: 'Every section has a ▶ button that reads it aloud. Stop playback here.',
+    readAloudHint:
+      'Choose Read aloud beside a section. Available voices depend on your browser and device.',
     stopReading: '■ Stop reading',
     readSection: 'Read this section aloud',
   },
   home: {
+    design: {
+      titleStart: 'More confidence.',
+      titleAccent: 'More possibilities.',
+      intro:
+        'We support people with visual impairments and their families on the path to a more independent, active and fulfilling life.',
+      photoCaption: 'Small steps towards greater independence',
+      noteTitle: 'You belong here.',
+      noteText: 'Support, understanding and community.',
+      accessTitle: 'A place for everyone.',
+      accessKeyboard: 'Keyboard navigation',
+      accessContrast: 'Contrast settings',
+      accessListen: 'Read aloud',
+      accessMore: 'About accessibility',
+      servicesEyebrow: 'Support for everyday life',
+      servicesTitle: 'By your side, at every step.',
+      allServices: 'All 7 services',
+      mobility:
+        'Build confidence using a white cane and moving independently around the city and in everyday life.',
+      support:
+        'A space to share, feel understood and find support that reflects your individual needs.',
+      digital:
+        'Open up the digital world with screen readers, practical skills and individual training.',
+      explore: 'Explore this service',
+      missionTitle: 'Possibilities begin with support.',
+      aboutLink: 'Get to know us',
+      since: 'the beginning of our story',
+      servicesFact: 'specialist services',
+      belief: 'We believe in people and the strength of community.',
+      momentsEyebrow: 'Life in our community',
+      momentsTitle: 'Together, we do more.',
+      galleryLink: 'Explore the gallery',
+      libraryTitle: 'Stories you can listen to.',
+      libraryText:
+        'Discover free audiobooks in Bulgarian. Choose a story and listen right here, at your own pace.',
+      libraryLink: 'Explore the library',
+      faqEyebrow: 'Here to help',
+      faqIntro:
+        'A few answers to help you take the first step. For everything else, we are just a conversation away.',
+      contactEyebrow: 'We are here for you',
+      contactTitle: 'Let’s start with a conversation.',
+      contactText:
+        'For yourself, for someone close to you, or for a cause you believe in.',
+    },
     metaTitle: 'Home',
     heroBadge: 'Pazardzhik · since 2014',
     heroTitle: 'Sight is not a condition for a full life',
@@ -95,7 +140,8 @@ export const en: typeof bg = {
     metaTitle: 'Frequently asked questions',
     eyebrow: 'Useful information',
     title: 'Frequently asked questions',
-    intro: 'Answers to the most common questions about the foundation, our services and how to get support.',
+    intro:
+      'Answers to the most common questions about the foundation, our services and how to get support.',
     items: [
       {
         q: 'What is Foundation "Saprichastie — Pazardzhik"?',
@@ -201,7 +247,8 @@ export const en: typeof bg = {
         'Independent-living training',
         'Braille literacy',
       ],
-      imageAlt: 'The foundation team and the users of the Centre gathered for a group photo in the hall',
+      imageAlt:
+        'The foundation team and the users of the Centre gathered for a group photo in the hall',
     },
     psycho: {
       title: 'Psychological support',
@@ -215,17 +262,20 @@ export const en: typeof bg = {
         'Stress-management techniques',
         'Building confidence and positive self-perception',
       ],
-      imageAlt: 'Participants in a group session gathered in the computer room of the Centre',
+      imageAlt:
+        'Participants in a group session gathered in the computer room of the Centre',
     },
     computer: {
       title: 'Digital literacy',
       text: 'Training in computer skills for people with visual impairments, including the use of specialised software, screen readers and other assistive technology.',
-      imageAlt: 'Women practising computer skills in the training room of the Centre',
+      imageAlt:
+        'Women practising computer skills in the training room of the Centre',
     },
     orientation: {
       title: 'Urban orientation',
       text: 'Helping people with visual impairments move independently in the urban environment using specialised techniques and mobility aids.',
-      imageAlt: 'Two people with white canes walking along tactile paving on a shopping street',
+      imageAlt:
+        'Two people with white canes walking along tactile paving on a shopping street',
     },
     legal: {
       title: 'Legal and administrative help',
@@ -235,7 +285,8 @@ export const en: typeof bg = {
     sport: {
       title: 'Sport and physical activity',
       text: 'Sports activities adapted for people with visual impairments, which help improve physical health and social integration.',
-      imageAlt: 'Players wearing blackout goggles practising showdown at a specialised table',
+      imageAlt:
+        'Players wearing blackout goggles practising showdown at a specialised table',
     },
     training: {
       title: 'Training and consulting',
@@ -251,7 +302,8 @@ export const en: typeof bg = {
       ],
     },
     ctaTitle: 'Do you need help?',
-    ctaText: 'Contact our team today to learn more about how we can support you or someone close to you.',
+    ctaText:
+      'Contact our team today to learn more about how we can support you or someone close to you.',
     ctaButton: 'Contact us',
   },
   activities: {
@@ -311,7 +363,8 @@ export const en: typeof bg = {
       ],
       outro:
         'These activities are carefully planned to be safe and enjoyable for participants with visual impairments, with appropriate guidance and support provided.',
-      imageAlt: 'Outdoor orientation and mobility training on the streets of Pazardzhik',
+      imageAlt:
+        'Outdoor orientation and mobility training on the streets of Pazardzhik',
     },
     upcoming: {
       title: 'Upcoming activities',
@@ -327,15 +380,37 @@ export const en: typeof bg = {
     intro:
       'Moments from the activities and events we organise. Every photograph carries a text description for screen-reader users.',
     items: [
-      { key: 'computer-training', caption: 'Computer training with a screen reader' },
+      {
+        key: 'computer-training',
+        caption: 'Computer training with a screen reader',
+      },
       { key: 'showdown-practice', caption: 'Showdown practice in Pazardzhik' },
-      { key: 'support-group', caption: 'A support group in the hall of the Centre' },
-      { key: 'urban-orientation', caption: 'Orientation and mobility on the city streets' },
-      { key: 'braille-training-children', caption: 'Children getting to know braille technology' },
-      { key: 'white-cane-demonstration', caption: 'A white-cane demonstration for children' },
+      {
+        key: 'support-group',
+        caption: 'A support group in the hall of the Centre',
+      },
+      {
+        key: 'urban-orientation',
+        caption: 'Orientation and mobility on the city streets',
+      },
+      {
+        key: 'braille-training-children',
+        caption: 'Children getting to know braille technology',
+      },
+      {
+        key: 'white-cane-demonstration',
+        caption: 'A white-cane demonstration for children',
+      },
       { key: 'center-group', caption: 'The foundation team and its users' },
-      { key: 'mobility-obstacles', caption: 'Mobility training with obstacles' },
-      { key: 'kindness-message', caption: 'A message from our campaigns: “Kindness — the language the deaf can hear and the blind can see”' },
+      {
+        key: 'mobility-obstacles',
+        caption: 'Mobility training with obstacles',
+      },
+      {
+        key: 'kindness-message',
+        caption:
+          'A message from our campaigns: “Kindness — the language the deaf can hear and the blind can see”',
+      },
     ],
     submitNote: 'Have a photograph from our activities? Send it to',
     submitNote2: 'together with a short description.',
@@ -396,7 +471,8 @@ export const en: typeof bg = {
     formMessage: 'Message',
     formSubmit: 'Send',
     formSending: 'Sending…',
-    formNote: 'You can also simply call us — we answer on working days between 9:00 and 17:00.',
+    formNote:
+      'You can also simply call us — we answer on working days between 9:00 and 17:00.',
     a11yTitle: 'Accessibility statement',
     a11yP1:
       'Our foundation is committed to ensuring that our physical premises and services are accessible to people with impaired vision. If you need special arrangements when visiting us or taking part in our activities, please tell us in advance and we will do everything possible to meet your needs.',
@@ -418,14 +494,17 @@ export const en: typeof bg = {
   },
   footer: {
     updated: 'Last updated:',
-    mission: 'Our mission is to support people with visual impairments towards their full inclusion in society.',
+    mission:
+      'Our mission is to support people with visual impairments towards their full inclusion in society.',
     contactTitle: 'Contact',
     addressLine1: '2 Peyo Yavorov St, floor 2',
     addressLine2: 'Pazardzhik 4400, Bulgaria',
     pagesTitle: 'Pages',
     navLabel: 'Footer navigation',
-    copyright: '© 2026 Foundation “Saprichastie — Pazardzhik”. All rights reserved.',
-    a11yNote: 'This website is built to be accessible to everyone, including people with visual impairments.',
+    copyright:
+      '© 2026 Foundation “Saprichastie — Pazardzhik”. All rights reserved.',
+    a11yNote:
+      'This website is built to be accessible to everyone, including people with visual impairments.',
   },
   notFound: {
     metaTitle: 'Page not found',

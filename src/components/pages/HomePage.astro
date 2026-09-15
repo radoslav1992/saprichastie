@@ -1,18 +1,20 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import HeroArt from '../HeroArt.astro';
 import ReadButton from '../ReadButton.astro';
+import Icon from '../Icon.astro';
+import orientation from '../../assets/photos/urban-orientation.jpg';
+import braille from '../../assets/photos/braille-training-children.jpg';
+import community from '../../assets/photos/center-group.jpg';
+import computer from '../../assets/photos/computer-training.jpg';
 import { type Lang, useTranslations, localizePath } from '../../i18n';
-
 interface Props {
   lang: Lang;
 }
-
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const cardLinks = ['/about', '/services', '/gallery'];
-
-/* Q&A on the home page itself, so answer engines find it front and centre. */
+const c = t.home.design;
+const link = (path: string) => localizePath(lang, path);
 const homeFaq = t.faq.items.slice(0, 4);
 const faqLd = {
   '@type': 'FAQPage',
@@ -22,368 +24,876 @@ const faqLd = {
     acceptedAnswer: { '@type': 'Answer', text: item.a },
   })),
 };
+const services = [
+  {
+    icon: 'compass',
+    title: t.services.toc.orientation,
+    text: c.mobility,
+    href: '/services#orient',
+  },
+  {
+    icon: 'heart',
+    title: t.services.toc.psycho,
+    text: c.support,
+    href: '/services#psiho',
+  },
+  {
+    icon: 'screen',
+    title: t.services.toc.computer,
+    text: c.digital,
+    href: '/services#komp',
+  },
+];
+const moments = [
+  { image: braille, text: t.gallery.items[4].caption },
+  { image: community, text: t.gallery.items[6].caption },
+  { image: computer, text: t.gallery.items[0].caption },
+];
 ---
 
 <Base lang={lang} path="/" title={t.home.metaTitle} extraLd={[faqLd]}>
-  <section data-read aria-label={t.home.sectionLabels.hero} class="hero rule-bottom">
-    <div class="hero__split">
-      <div class="hero__copy">
-        <span class="hero__badge" data-accent>{t.home.heroBadge}</span>
-        <h1>{t.home.heroTitle}</h1>
-        <p class="hero__text">{t.home.heroText}</p>
-        <div class="hero__ctas">
-          <a href={localizePath(lang, '/services')} class="btn btn--solid">{t.home.heroCta1}</a>
-          <a href={localizePath(lang, '/contact')} class="btn btn--outline">{t.home.heroCta2}</a>
-        </div>
-        <div class="hero__phone">
-          <a href={t.phoneHref}>{t.phone}</a>
-          <span class="muted">{t.home.heroHours}</span>
-        </div>
-      </div>
-      <div class="hero__media">
-        <HeroArt />
-      </div>
-    </div>
-    <ReadButton lang={lang} />
-  </section>
-
-  <section data-read aria-label={t.home.sectionLabels.start} class="start container">
-    <div class="start__head">
-      <h2 class="display">{t.home.startTitle}</h2>
-      <span class="muted start__sub">{t.home.startSubtitle}</span>
-    </div>
-    <div class="start__grid">
-      {
-        t.home.startCards.map((card, i) => (
-          <a href={localizePath(lang, cardLinks[i])} class="start-card card">
-            <span aria-hidden="true" class="start-card__num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="start-card__title">{card.title}</span>
-            <span class="start-card__text">{card.text}</span>
-            <span class="start-card__more">{t.home.startMore}</span>
-          </a>
-        ))
-      }
-    </div>
-    <ReadButton lang={lang} />
-  </section>
-
-  <section data-read aria-label={t.home.sectionLabels.mission} class="mission ink-panel">
-    <div class="mission__inner">
-      <span class="eyebrow eyebrow--accent">{t.home.missionLabel}</span>
-      <p class="mission__text">{t.home.missionText}</p>
-      <div class="mission__ctas">
-        <a href={localizePath(lang, '/activities')} class="btn btn--sm btn--accent btn--accent-on-ink">
-          {t.home.missionCta1}
+  <section class="hero container" aria-labelledby="hero-title">
+    <div class="hero__copy" data-read>
+      <span class="hero__badge">
+        <span aria-hidden="true"></span>
+        {t.home.heroBadge}
+      </span>
+      <h1 id="hero-title">
+        {c.titleStart}
+        <br />
+        <em>{c.titleAccent}</em>
+      </h1>
+      <p class="hero__text">{c.intro}</p>
+      <div class="hero__ctas">
+        <a href={link('/contact')} class="btn btn--solid">
+          {t.home.heroCta2}
+          <Icon name="arrow" size={19} />
         </a>
-        <a href={localizePath(lang, '/contact')} class="btn btn--sm btn--ghost-on-ink">
-          {t.home.missionCta2}
+        <a href={link('/services')} class="btn btn--outline">
+          {t.home.heroCta1}
         </a>
       </div>
+      <div class="hero__phone">
+        <Icon name="phone" size={17} />
+        <a href={t.phoneHref}>{t.phone}</a>
+        <span>{t.home.heroHours}</span>
+      </div>
+      <ReadButton lang={lang} />
+    </div>
+    <div class="hero__visual">
+      <div class="tactile-art" aria-hidden="true">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+      <figure class="hero-photo">
+        <Image
+          src={orientation}
+          alt={t.activities.outdoors.imageAlt}
+          widths={[480, 800, 1100]}
+          sizes="(max-width: 800px) 90vw, 46vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>
+          <Icon name="pin" size={16} />
+          {c.photoCaption}
+        </figcaption>
+      </figure>
+      <div class="hero-note">
+        <span class="hero-note__icon">
+          <Icon name="people" size={24} />
+        </span>
+        <div>
+          <strong>{c.noteTitle}</strong>
+          <span>{c.noteText}</span>
+        </div>
+      </div>
+      <div class="dot-pattern" aria-hidden="true">
+        {Array.from({ length: 24 }, () => (
+          <i />
+        ))}
+      </div>
+    </div>
+  </section>
+  <div class="access-strip">
+    <div class="container access-strip__inner">
+      <p>
+        <Icon name="access" size={23} />
+        <strong>{c.accessTitle}</strong>
+      </p>
+      <ul>
+        <li>{c.accessKeyboard}</li>
+        <li>{c.accessContrast}</li>
+        <li>{c.accessListen}</li>
+      </ul>
+      <a href={link('/contact#accessibility')} class="text-link">
+        {c.accessMore}
+        <Icon name="arrow" size={17} />
+      </a>
+    </div>
+  </div>
+  <section
+    class="services-home container"
+    aria-labelledby="services-title"
+    data-read
+  >
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">{c.servicesEyebrow}</p>
+        <h2 class="display" id="services-title">
+          {c.servicesTitle}
+        </h2>
+      </div>
+      <a href={link('/services')} class="text-link">
+        {c.allServices}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+    <div class="service-grid">
+      {services.map((s, i) => (
+        <a class="service-tile" href={link(s.href)}>
+          <span class={`service-icon service-icon--${i}`}>
+            <Icon name={s.icon} size={29} />
+          </span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+          <span class="service-tile__link">
+            {c.explore}
+            <Icon name="arrow" size={18} />
+          </span>
+        </a>
+      ))}
     </div>
     <ReadButton lang={lang} />
   </section>
-
-  <section data-read aria-label={t.home.sectionLabels.stats} class="stats container">
-    <div class="stats__grid">
-      {
-        t.home.stats.map((stat) => (
-          <div class="stat">
-            <span class="stat__value">{stat.value}</span>
-            <span class="muted stat__label">{stat.label}</span>
-          </div>
-        ))
-      }
+  <section class="mission-home" aria-labelledby="mission-title">
+    <div class="container mission-grid">
+      <div class="mission-home__copy" data-read>
+        <p class="eyebrow eyebrow--accent">{t.home.missionLabel}</p>
+        <h2 class="display" id="mission-title">
+          {c.missionTitle}
+        </h2>
+        <p>{t.about.missionP1}</p>
+        <a href={link('/about')} class="btn btn--accent">
+          {c.aboutLink}
+          <Icon name="arrow" size={18} />
+        </a>
+        <ReadButton lang={lang} />
+      </div>
+      <div class="mission-facts">
+        <div>
+          <strong>2014</strong>
+          <span>{c.since}</span>
+        </div>
+        <div>
+          <strong>7</strong>
+          <span>{c.servicesFact}</span>
+        </div>
+        <p>
+          <Icon name="heart" size={24} />
+          {c.belief}
+        </p>
+      </div>
     </div>
-    <ReadButton lang={lang} />
   </section>
-
-  <section data-read aria-label={t.home.sectionLabels.faq} class="home-faq container">
-    <h2 class="display home-faq__title">{t.home.faqTitle}</h2>
-    <div class="home-faq__list">
-      {
-        homeFaq.map((item) => (
-          <article class="card home-faq__item">
-            <h3>{item.q}</h3>
+  <section class="moments container" aria-labelledby="moments-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">{c.momentsEyebrow}</p>
+        <h2 class="display" id="moments-title">
+          {c.momentsTitle}
+        </h2>
+      </div>
+      <a href={link('/gallery')} class="text-link">
+        {c.galleryLink}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+    <div class="moments-grid">
+      {moments.map((m) => (
+        <figure>
+          <Image
+            src={m.image}
+            alt={m.text}
+            widths={[400, 720]}
+            sizes="(max-width: 650px) 90vw, 30vw"
+            loading="lazy"
+          />
+          <figcaption>{m.text}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+  <section class="container library-home" aria-labelledby="library-title">
+    <div class="library-banner">
+      <div class="library-art" aria-hidden="true">
+        <Icon name="book" size={90} />
+        <span>
+          {Array.from({ length: 17 }, (_, i) => (
+            <i style={`--height: ${20 + Math.abs(Math.sin(i * 1.3)) * 52}px`} />
+          ))}
+        </span>
+      </div>
+      <div class="library-copy" data-read>
+        <p class="eyebrow">{t.library.eyebrow}</p>
+        <h2 class="display" id="library-title">
+          {c.libraryTitle}
+        </h2>
+        <p>{c.libraryText}</p>
+        <a href={link('/library')} class="btn btn--solid">
+          <Icon name="headphones" size={19} />
+          {c.libraryLink}
+        </a>
+        <ReadButton lang={lang} />
+      </div>
+    </div>
+  </section>
+  <section class="home-faq container" aria-labelledby="faq-title">
+    <div class="faq-heading">
+      <p class="eyebrow">{c.faqEyebrow}</p>
+      <h2 class="display" id="faq-title">
+        {t.home.faqTitle}
+      </h2>
+      <p>{c.faqIntro}</p>
+      <a href={link('/faq')} class="text-link">
+        {t.home.faqAll}
+      </a>
+    </div>
+    <div class="faq-list">
+      {homeFaq.map((item) => (
+        <details>
+          <summary>
+            {item.q}
+            <span aria-hidden="true">+</span>
+          </summary>
+          <div data-read>
             <p>{item.a}</p>
-          </article>
-        ))
-      }
+            <ReadButton lang={lang} />
+          </div>
+        </details>
+      ))}
     </div>
-    <a href={localizePath(lang, '/faq')} class="btn btn--outline home-faq__all">{t.home.faqAll}</a>
-    <ReadButton lang={lang} />
+  </section>
+  <section class="contact-home container" aria-labelledby="contact-title">
+    <div>
+      <p class="eyebrow">{c.contactEyebrow}</p>
+      <h2 class="display" id="contact-title">
+        {c.contactTitle}
+      </h2>
+      <p>{c.contactText}</p>
+    </div>
+    <a href={link('/contact')} class="btn btn--solid">
+      {t.home.heroCta2}
+      <Icon name="arrow" size={19} />
+    </a>
   </section>
 </Base>
-
 <style>
-  .hero__split {
-    max-width: var(--container);
-    margin: 0 auto;
+  .hero {
+    overflow: clip;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 64px;
+    padding-top: 65px;
+    padding-bottom: 70px;
   }
-
-  .hero__copy {
-    padding: 76px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: flex-start;
-  }
-
   .hero__badge {
-    padding: 8px 16px;
-    background: var(--accent);
-    border: var(--border);
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
+    color: var(--muted);
   }
-
-  .hero__copy h1 {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(40px, 4.6vw, 72px);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    max-width: 16ch;
-    text-wrap: balance;
+  .hero__badge > span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a44823;
   }
-
+  h1 {
+    margin: 24px 0;
+    font-size: clamp(2.8rem, 4.9vw, 4.6rem);
+    letter-spacing: -0.055em;
+    font-weight: 550;
+    line-height: 1.08;
+  }
+  h1 em {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    color: #a44823;
+  }
   .hero__text {
-    font-size: 22px;
-    line-height: 1.55;
+    font-size: 1.1875rem;
+    line-height: 1.7;
+    color: var(--muted);
     max-width: 46ch;
-    text-wrap: pretty;
   }
-
   .hero__ctas {
     display: flex;
+    gap: 12px;
     flex-wrap: wrap;
-    gap: 14px;
-    padding-top: 6px;
+    margin-top: 30px;
   }
-
   .hero__phone {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-top: 10px;
     flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+    font-size: 0.8125rem;
   }
-
   .hero__phone a {
-    font-family: var(--font-display);
     font-weight: 700;
-    font-size: 20px;
     text-decoration: none;
-    color: inherit;
-    border-bottom: 3px solid var(--accent);
   }
-
-  .hero__phone .muted {
-    font-size: 16px;
+  .hero__phone span {
+    color: var(--muted);
   }
-
-  .hero__media {
+  .hero__visual {
     position: relative;
-    background: var(--ink);
-    border-left: var(--border);
-    min-height: 520px;
+    padding: 32px 0 35px;
+    min-width: 0;
+  }
+  .hero-photo {
+    position: relative;
+    border-radius: 160px 160px 20px 20px;
+    overflow: hidden;
+    margin-right: 14px;
+    background: var(--lavender);
+  }
+  .hero-photo img {
+    width: 100%;
+    height: 435px;
+    object-fit: cover;
+    object-position: 48% center;
+  }
+  .hero-photo figcaption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 23px;
+    color: var(--ink);
+    font-size: 0.8125rem;
+  }
+  .tactile-art {
+    position: absolute;
+    inset: 0 -13px 50px 30px;
+    border: 1px solid #c5cec0;
+    border-radius: 230px 230px 30px 30px;
+    transform: rotate(7deg);
+  }
+  .tactile-art i {
+    position: absolute;
+    inset: -12px;
+    border: 1px solid #d1d7c9;
+    border-radius: inherit;
+  }
+  .tactile-art i:nth-child(2) {
+    inset: -24px;
+  }
+  .tactile-art i:nth-child(3) {
+    inset: -36px;
+  }
+  .tactile-art i:nth-child(4) {
+    inset: -48px;
+  }
+  .hero-note {
+    position: absolute;
+    left: -32px;
+    bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 26px;
+    background: #fff;
+    border: var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px #183e3b0c;
+  }
+  .hero-note__icon {
     display: grid;
     place-items: center;
-    padding: 44px;
-    overflow: hidden;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--lavender);
   }
-
-  .hero__media :global(svg) {
-    width: 100%;
-    height: 100%;
-    max-height: 560px;
+  .hero-note strong,
+  .hero-note div > span {
+    display: block;
   }
-
-  .start {
-    padding-top: 84px;
-    padding-bottom: 84px;
+  .hero-note strong {
+    font-size: 1rem;
   }
-
-  .start__head {
-    display: flex;
-    align-items: baseline;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 44px;
+  .hero-note div > span {
+    color: var(--muted);
+    font-size: 0.8125rem;
   }
-
-  .start__head h2 {
-    font-size: clamp(30px, 3vw, 44px);
-    letter-spacing: -0.02em;
-  }
-
-  .start__sub {
-    font-size: 17px;
-  }
-
-  .start__grid {
+  .dot-pattern {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, 6px);
+    gap: 11px;
+    position: absolute;
+    right: -17px;
+    bottom: -2px;
+  }
+  .dot-pattern i {
+    width: 6px;
+    height: 6px;
+    background: #9f642f;
+    border-radius: 50%;
+  }
+  .access-strip {
+    background: #eef0e7;
+    border-block: var(--border);
+  }
+  .access-strip__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 20px;
+    padding-block: 18px;
+    font-size: 0.8125rem;
+    flex-wrap: wrap;
   }
-
-  .start-card {
+  .access-strip p {
     display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 34px;
-    text-decoration: none;
-    color: inherit;
+    align-items: center;
+    gap: 10px;
   }
-
-  .start-card:hover {
-    background: var(--accent);
-    color: inherit;
-  }
-
-  .start-card__num {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .start-card__title {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 26px;
-    letter-spacing: -0.02em;
-  }
-
-  .start-card__text {
-    font-size: 19px;
-    line-height: 1.55;
-  }
-
-  .start-card__more {
-    margin-top: auto;
-    padding-top: 14px;
-    font-weight: 800;
-    font-size: 17px;
-  }
-
-  .mission {
-    border-top: var(--border);
-    border-bottom: var(--border);
-  }
-
-  .mission__inner {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 96px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: flex-start;
-  }
-
-  .mission__text {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(24px, 2.5vw, 38px);
-    line-height: 1.34;
-    letter-spacing: -0.02em;
-    text-wrap: pretty;
-  }
-
-  .mission__ctas {
+  .access-strip ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
-    padding-top: 8px;
+    gap: 26px;
+    color: var(--muted);
   }
-
-  .stats {
-    padding-top: 84px;
-    padding-bottom: 84px;
+  .access-strip li::before {
+    content: '✓';
+    margin-right: 8px;
   }
-
-  .stats__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2px;
-    background: var(--ink);
-    border: var(--border);
-    border-radius: var(--radius-card);
-    overflow: hidden;
+  .access-strip .text-link {
+    font-size: 0.8125rem;
   }
-
-  .stat {
-    background: var(--bg);
-    padding: 38px 30px;
+  .services-home,
+  .moments {
+    padding-block: 78px;
+  }
+  .section-heading {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .stat__value {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 46px;
-    letter-spacing: -0.03em;
-  }
-
-  .stat__label {
-    font-size: 17px;
-    line-height: 1.5;
-  }
-
-  .home-faq {
-    padding-bottom: 90px;
-  }
-
-  .home-faq__title {
-    font-size: clamp(30px, 3vw, 44px);
-    letter-spacing: -0.02em;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
     margin-bottom: 34px;
   }
-
-  .home-faq__list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+  .section-heading .eyebrow {
+    margin-bottom: 13px;
   }
-
-  .home-faq__item {
-    padding: 30px;
+  .section-heading h2,
+  .library-copy h2,
+  .faq-heading h2,
+  .contact-home h2 {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+  .section-heading .text-link {
+    flex: none;
+    font-size: 0.9375rem;
+  }
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .service-tile {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-start;
+    padding: 30px;
+    border: var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    text-decoration: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
   }
-
-  .home-faq__item h3 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
+  .service-tile:hover {
+    border-color: #839788;
+    box-shadow: 0 8px 28px #183e3b0a;
   }
-
-  .home-faq__item p {
-    font-size: 18px;
-    line-height: 1.6;
+  .service-icon {
+    width: 57px;
+    height: 57px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: #e9ede1;
+    margin-bottom: 25px;
   }
-
-  @media (max-width: 1100px) {
-    .hero__split {
-      grid-template-columns: minmax(0, 1fr);
+  .service-icon--1 {
+    background: #f4e5d8;
+  }
+  .service-icon--2 {
+    background: #e4ecea;
+  }
+  .service-tile h3 {
+    font-size: 1.375rem;
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+  .service-tile p {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .service-tile__link {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 26px;
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+  .mission-home {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 90px;
+    padding-block: 65px;
+    align-items: center;
+  }
+  .mission-home h2 {
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    max-width: 17ch;
+    margin: 18px 0 24px;
+  }
+  .mission-home__copy > p:not(.eyebrow) {
+    font-size: 1.0625rem;
+    color: var(--footer-text);
+    margin-bottom: 25px;
+  }
+  .mission-home__copy .read-btn {
+    display: flex;
+    width: fit-content;
+  }
+  .mission-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    border-left: 1px solid #58736b;
+    padding-left: 55px;
+  }
+  .mission-facts div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mission-facts strong {
+    font-size: 3.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--accent);
+  }
+  .mission-facts span {
+    color: var(--footer-text);
+    font-size: 0.875rem;
+  }
+  .mission-facts p {
+    grid-column: 1/-1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 22px;
+    border-top: 1px solid #58736b;
+    margin-top: 12px;
+    font-size: 0.9375rem;
+  }
+  .mission-facts svg {
+    flex: none;
+  }
+  .moments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+  }
+  .moments-grid img {
+    width: 100%;
+    height: 245px;
+    object-fit: cover;
+    border-radius: 14px;
+  }
+  .moments-grid figcaption {
+    padding-top: 15px;
+    font-size: 1rem;
+    font-weight: 550;
+  }
+  .library-home {
+    padding-bottom: 80px;
+  }
+  .library-banner {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    background: var(--lavender);
+    border: var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  .library-art {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: var(--ink);
+    background: #dde5d7;
+    gap: 28px;
+  }
+  .library-art > span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 72px;
+  }
+  .library-art i {
+    display: block;
+    width: 5px;
+    height: var(--height);
+    background: #6d836a;
+    border-radius: 4px;
+  }
+  .library-copy {
+    padding: 46px;
+  }
+  .library-copy h2 {
+    margin: 14px 0 18px;
+  }
+  .library-copy > p:not(.eyebrow) {
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .library-copy .read-btn {
+    display: flex;
+    width: fit-content;
+  }
+  .home-faq {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 70px;
+    padding-bottom: 80px;
+  }
+  .faq-heading h2 {
+    margin: 15px 0 18px;
+  }
+  .faq-heading > p:not(.eyebrow) {
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .faq-heading .text-link {
+    font-size: 0.875rem;
+  }
+  .faq-list details {
+    border-bottom: var(--border);
+  }
+  .faq-list details:first-child {
+    border-top: var(--border);
+  }
+  .faq-list summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    cursor: pointer;
+    list-style: none;
+    padding: 22px 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .faq-list summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-list summary span {
+    font-size: 1.5rem;
+    font-weight: 400;
+    flex: none;
+  }
+  .faq-list details[open] summary span {
+    transform: rotate(45deg);
+  }
+  .faq-list details > div {
+    padding-bottom: 24px;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .contact-home {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    border-top: var(--border);
+    padding-block: 55px;
+  }
+  .contact-home h2 {
+    margin: 12px 0;
+  }
+  .contact-home p:not(.eyebrow) {
+    color: var(--muted);
+  }
+  .contact-home .btn {
+    flex: none;
+  }
+  @media (max-width: 1000px) {
+    .hero {
+      gap: 36px;
     }
-
-    .hero__media {
-      order: 2;
-      min-height: 300px;
+    .hero-note {
+      left: -15px;
+      padding: 16px;
+    }
+    .hero-photo img {
+      height: 400px;
+    }
+    .hero__visual {
+      margin-right: 20px;
+    }
+    .service-tile {
+      padding: 24px;
+    }
+    .mission-grid {
+      gap: 40px;
+    }
+    .mission-facts {
+      padding-left: 30px;
+    }
+    .home-faq {
+      gap: 35px;
+    }
+  }
+  @media (max-width: 800px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding-top: 42px;
+    }
+    .hero__visual {
+      max-width: 580px;
+      width: calc(100% - 25px);
+      margin: 16px auto 0;
+    }
+    .hero-photo img {
+      height: 410px;
+    }
+    .hero__text {
+      max-width: 58ch;
+    }
+    .service-grid {
+      grid-template-columns: 1fr;
+    }
+    .service-tile {
+      padding: 28px;
+    }
+    .mission-grid {
+      grid-template-columns: 1fr;
+    }
+    .mission-facts {
       border-left: 0;
-      border-top: var(--border);
+      padding: 0;
     }
+    .library-banner {
+      grid-template-columns: 1fr;
+    }
+    .library-art {
+      flex-direction: row;
+      padding: 32px;
+    }
+    .home-faq {
+      grid-template-columns: 1fr;
+    }
+    .contact-home {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 650px) {
+    .section-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .moments-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .moments-grid img {
+      height: auto;
+      aspect-ratio: 4/3;
+    }
+    .services-home,
+    .moments {
+      padding-block: 50px;
+    }
+    .library-home,
+    .home-faq {
+      padding-bottom: 50px;
+    }
+    .library-copy {
+      padding: 28px;
+    }
+    .access-strip ul {
+      gap: 12px;
+    }
+    .hero {
+      padding-bottom: 50px;
+    }
+    .hero-photo img {
+      height: 340px;
+    }
+    .hero-note {
+      left: -5px;
+      right: 20px;
+    }
+    .tactile-art i:nth-child(n + 3) {
+      display: none;
+    }
+    .dot-pattern {
+      right: -8px;
+    }
+    .hero__phone {
+      gap: 8px;
+    }
+    .hero__phone span {
+      flex-basis: 100%;
+    }
+    .hero__ctas .btn {
+      flex-grow: 1;
+    }
+  }
+  :global(html[data-hc='dark']) h1 em {
+    color: #ffe800;
+  }
+  :global(html[data-hc='dark']) .mission-facts strong {
+    color: #ffe800;
+  }
+  :global(html[data-fs='135']) .hero-note,
+  :global(html[data-fs='160']) .hero-note {
+    position: relative;
+    inset: auto;
+    margin-top: 15px;
+  }
+  :global(html[data-fs='160']) .hero,
+  :global(html[data-fs='160']) .mission-grid,
+  :global(html[data-fs='160']) .library-banner,
+  :global(html[data-fs='160']) .home-faq {
+    grid-template-columns: 1fr;
+  }
+  :global(html[data-fs='160']) .section-heading {
+    flex-wrap: wrap;
   }
 </style>

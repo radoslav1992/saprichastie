@@ -8,14 +8,14 @@ visual impairments. Built with [Astro](https://astro.build) and deployed as a
 
 Bilingual, Bulgarian first — every page exists at `/…` (BG) and `/en/…` (EN):
 
-| BG | EN | Page |
-| --- | --- | --- |
-| `/` | `/en/` | Home |
-| `/about` | `/en/about` | About us |
-| `/services` | `/en/services` | Services |
-| `/activities` | `/en/activities` | Activities |
-| `/gallery` | `/en/gallery` | Gallery |
-| `/contact` | `/en/contact` | Contact + form |
+| BG            | EN               | Page           |
+| ------------- | ---------------- | -------------- |
+| `/`           | `/en/`           | Home           |
+| `/about`      | `/en/about`      | About us       |
+| `/services`   | `/en/services`   | Services       |
+| `/activities` | `/en/activities` | Activities     |
+| `/gallery`    | `/en/gallery`    | Gallery        |
+| `/contact`    | `/en/contact`    | Contact + form |
 
 All copy lives in `src/i18n/bg.ts` and `src/i18n/en.ts` — edit those files to
 change any text on the site.
@@ -29,9 +29,26 @@ The site targets WCAG and ships a visitor-facing accessibility panel
 - high-contrast mode (yellow on black),
 - wider letter & line spacing,
 - underlined links,
-- per-section read-aloud (Web Speech API) with BG/EN voices.
+- per-section read-aloud (Web Speech API; voices depend on the browser/device),
+- keyboard-operable navigation and FAQ disclosures, visible focus and a skip link,
+- a reset button and Escape-to-close accessibility settings.
 
 Preferences persist in `localStorage` and are applied before first paint.
+Text enlargement uses root-relative typography so the content can reflow.
+Read-aloud controls are hidden when speech synthesis is unavailable; the site
+remains readable and navigable without JavaScript. The mobile menu falls back
+to visible navigation without JavaScript.
+
+## Visual design
+
+The public site uses warm cream, deep teal, terracotta accents, community
+photography, and decorative tactile patterns. The existing foundation logo,
+Bulgarian/English routes, contact details and admin storage are retained.
+Homepage editorial photos are bundled assets; `/gallery` continues to show
+the administrator-managed collection whenever it contains photos. Admins can
+still upload, edit bilingual captions, reorder, import and remove gallery photos.
+The footer includes a direct `/admin` link. No new Cloudflare bindings,
+secrets, migrations or third-party services are required for the redesign.
 
 ## Development
 

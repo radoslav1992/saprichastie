@@ -2,17 +2,20 @@
 import { Image } from 'astro:assets';
 import logoBlack from '../assets/logo-black.png';
 import logoWhite from '../assets/logo-white.png';
-import { type Lang, useTranslations, localizePath, alternatePath } from '../i18n';
+import {
+  type Lang,
+  useTranslations,
+  localizePath,
+  alternatePath,
+} from '../i18n';
 import A11yPanel from './A11yPanel.astro';
-
+import Icon from './Icon.astro';
 interface Props {
   lang: Lang;
   path: string;
 }
-
 const { lang, path } = Astro.props;
 const t = useTranslations(lang);
-
 const navItems = [
   { href: '/', label: t.nav.home },
   { href: '/about', label: t.nav.about },
@@ -24,13 +27,51 @@ const navItems = [
 ];
 ---
 
-<header data-noprint>
-  <div class="header-bar">
-    <a href={localizePath(lang, '/')} class="brand">
+<header class="site-header" data-noprint>
+  <div class="utility-bar">
+    <div class="container utility-bar__inner">
+      <p>
+        {lang === 'bg'
+          ? 'Заедно за живот с повече възможности.'
+          : 'Together, for a life with more possibilities.'}
+      </p>
+      <div class="header-tools">
+        <a class="utility-phone" href={t.phoneHref}>
+          <Icon name="phone" size={14} />
+          {t.phone}
+        </a>
+        <button
+          type="button"
+          class="a11y-toggle"
+          aria-label={t.header.a11yButtonLabel}
+          aria-expanded="false"
+          aria-controls="a11y-panel"
+          data-a11y-toggle
+        >
+          <Icon name="access" size={18} />
+          {t.header.a11yButton}
+        </button>
+        <a
+          href={alternatePath(lang, path)}
+          class="lang-switch"
+          lang={lang === 'bg' ? 'en' : 'bg'}
+          aria-label={t.header.langButtonLabel}
+        >
+          {t.header.langButtonShort}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="container header-bar">
+    <a
+      href={localizePath(lang, '/')}
+      class="brand"
+      aria-label={`${t.site.name} — ${t.nav.home}`}
+    >
       <span class="brand__logo">
         <Image
           src={logoBlack}
-          alt={t.header.logoAlt}
+          alt=""
           width={96}
           height={96}
           densities={[1, 2]}
@@ -39,7 +80,7 @@ const navItems = [
         />
         <Image
           src={logoWhite}
-          alt={t.header.logoAlt}
+          alt=""
           width={96}
           height={96}
           densities={[1, 2]}
@@ -48,201 +89,236 @@ const navItems = [
       </span>
       <span class="brand__text">
         <span class="brand__name">{t.header.orgName}</span>
-        <span class="brand__place">{t.header.orgPlace}</span>
+        <span class="brand__place">
+          {lang === 'bg' ? 'Фондация · Пазарджик' : 'Foundation · Pazardzhik'}
+        </span>
       </span>
     </a>
-
-    <nav aria-label={t.header.navLabel}>
-      {
-        navItems.map((item) => (
-          <a
-            href={localizePath(lang, item.href)}
-            class="nav-link"
-            aria-current={item.href === path ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
-        ))
-      }
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      hidden
+    >
+      <span aria-hidden="true">☰</span> {lang === 'bg' ? 'Меню' : 'Menu'}
+    </button>
+    <nav id="site-nav" aria-label={t.header.navLabel}>
+      {navItems.map((item) => (
+        <a
+          href={localizePath(lang, item.href)}
+          class="nav-link"
+          aria-current={
+            item.href === path ||
+            (item.href === '/library' && path.startsWith('/library/'))
+              ? 'page'
+              : undefined
+          }
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
-
-    <div class="header-tools">
-      <button
-        type="button"
-        class="a11y-toggle"
-        aria-label={t.header.a11yButtonLabel}
-        aria-expanded="false"
-        aria-controls="a11y-panel"
-        data-a11y-toggle
-      >
-        <span aria-hidden="true" class="a11y-toggle__icon">◐</span>
-        <span>{t.header.a11yButton}</span>
-      </button>
-      <a
-        href={alternatePath(lang, path)}
-        class="lang-switch"
-        lang={lang === 'bg' ? 'en' : 'bg'}
-        aria-label={t.header.langButtonLabel}
-      >
-        {t.header.langButtonShort}
-      </a>
-    </div>
   </div>
-
   <A11yPanel lang={lang} />
 </header>
-
+<script>
+  const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const nav = document.getElementById('site-nav');
+  if (menu && nav) {
+    menu.hidden = false;
+    nav.classList.add('nav-enhanced');
+    menu.addEventListener('click', () => {
+      const open = menu.getAttribute('aria-expanded') !== 'true';
+      menu.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('nav-open', open);
+    });
+    nav.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        menu.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('nav-open');
+        menu.focus();
+      }
+    });
+  }
+</script>
 <style>
-  header {
+  .site-header {
     position: sticky;
     top: 0;
     z-index: 40;
     background: var(--bg);
     border-bottom: var(--border);
   }
-
-  .header-bar {
-    max-width: var(--container);
-    margin: 0 auto;
-    padding: 14px 28px;
+  .utility-bar {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .utility-bar__inner {
     display: flex;
     align-items: center;
-    gap: 28px;
+    justify-content: space-between;
+    gap: 20px;
   }
-
+  .utility-bar p {
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+  }
+  .header-tools {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .header-tools a,
+  .a11y-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+  .header-tools a:hover,
+  .a11y-toggle:hover {
+    text-decoration: underline;
+  }
+  .lang-switch {
+    min-width: 44px;
+    font-weight: 700;
+    border-left: 1px solid #58736b !important;
+  }
+  .header-bar {
+    padding-block: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 26px;
+    flex-wrap: wrap;
+  }
   .brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     text-decoration: none;
-    color: inherit;
-  }
-
-  .brand:hover {
-    background: none;
-    color: inherit;
-  }
-
-  .brand__logo {
-    width: 52px;
-    height: 52px;
     flex: none;
-    display: grid;
-    place-items: center;
   }
-
+  .brand__logo {
+    width: 46px;
+    height: 46px;
+    flex: none;
+  }
   .brand__logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
-
   .brand__text {
     display: flex;
     flex-direction: column;
-    line-height: 1.1;
+    gap: 3px;
+    line-height: 1.2;
   }
-
   .brand__name {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 17px;
-    letter-spacing: -0.01em;
+    font-weight: 750;
+    font-size: 1.5rem;
+    letter-spacing: -0.045em;
   }
-
   .brand__place {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
+    color: var(--muted);
+    font-size: 0.6875rem;
     text-transform: uppercase;
-    color: var(--muted-2);
+    letter-spacing: 0.13em;
   }
-
   nav {
-    margin-left: auto;
     display: flex;
-    align-items: center;
-    gap: 4px;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
   }
-
   .nav-link {
-    padding: 10px 14px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 16px;
+    padding: 10px 11px;
+    border-radius: 6px;
+    font-weight: 550;
+    font-size: 0.9375rem;
     text-decoration: none;
-    color: inherit;
   }
-
   .nav-link:hover {
     background: var(--lavender);
-    color: inherit;
   }
-
   .nav-link[aria-current='page'] {
-    background: var(--ink);
-    color: var(--bg);
-  }
-
-  .header-tools {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .a11y-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: var(--ink);
-    color: var(--bg);
-    border: var(--border);
-    border-radius: 999px;
+    color: var(--ink);
+    background: var(--lavender);
     font-weight: 700;
-    font-size: 15px;
+  }
+  .menu-toggle {
+    display: none;
+    min-height: 44px;
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 7px;
+    padding: 8px 12px;
     cursor: pointer;
   }
-
-  .a11y-toggle:hover,
-  .a11y-toggle[aria-expanded='true'] {
-    background: var(--accent);
-    color: var(--ink);
-  }
-
-  .a11y-toggle__icon {
-    font-size: 17px;
-  }
-
-  .lang-switch {
-    padding: 10px 14px;
-    background: none;
-    border: var(--border);
-    border-radius: 999px;
-    font-weight: 800;
-    font-size: 15px;
-    min-width: 64px;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .lang-switch:hover {
-    background: var(--accent);
-    color: var(--ink);
-  }
-
-  @media (max-width: 1000px) {
+  @media (max-width: 1050px) {
     .header-bar {
-      flex-wrap: wrap;
-      row-gap: 12px;
+      gap: 16px;
     }
-
     nav {
-      order: 3;
       width: 100%;
-      margin-left: 0;
     }
+    nav.nav-enhanced {
+      display: none;
+    }
+    nav.nav-open {
+      display: flex;
+    }
+    .menu-toggle {
+      display: block;
+      margin-left: auto;
+    }
+    .nav-link {
+      flex: 1 0 27%;
+    }
+  }
+  @media (max-width: 600px) {
+    .site-header {
+      position: relative;
+    }
+    .utility-bar p,
+    .utility-phone {
+      display: none !important;
+    }
+    .utility-bar__inner {
+      justify-content: flex-end;
+    }
+    .header-tools {
+      gap: 16px;
+    }
+    .header-bar {
+      padding-block: 16px;
+    }
+    .brand__name {
+      font-size: 1.25rem;
+    }
+    .brand__place {
+      font-size: 0.625rem;
+      letter-spacing: 0.08em;
+    }
+    .brand__logo {
+      width: 38px;
+      height: 38px;
+    }
+    .nav-link {
+      flex-basis: 40%;
+    }
+  }
+  :global(html[data-fs='135']) .site-header,
+  :global(html[data-fs='160']) .site-header {
+    position: relative;
   }
 </style>

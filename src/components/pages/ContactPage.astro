@@ -11,7 +11,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const c = t.contact;
 
-const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Пазарджик, България');
+const mapQuery = encodeURIComponent(
+  'ул. Пейо Яворов 2, 4400 Пазарджик, България',
+);
 ---
 
 <Base lang={lang} path="/contact" title={c.metaTitle} description={c.intro}>
@@ -33,11 +35,15 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
         </div>
         <div class="info-row">
           <span class="info-label">{c.phoneLabel}</span>
-          <a href={t.phoneHref} class="info-phone">{t.phone}</a>
+          <a href={t.phoneHref} class="info-phone">
+            {t.phone}
+          </a>
         </div>
         <div class="info-row">
           <span class="info-label">{c.emailLabel}</span>
-          <a href={`mailto:${t.email}`} class="info-mail">{t.email}</a>
+          <a href={`mailto:${t.email}`} class="info-mail">
+            {t.email}
+          </a>
         </div>
         <div class="info-row info-row--last">
           <span class="info-label">{c.hoursLabel}</span>
@@ -54,7 +60,10 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
         ></iframe>
       </div>
       <p class="map-link">
-        <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} rel="noopener">
+        <a
+          href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+          rel="noopener"
+        >
           {c.mapLink}
         </a>
       </p>
@@ -67,27 +76,57 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
         <input type="hidden" name="lang" value={lang} />
         <p class="hp-field" aria-hidden="true">
           <label for="f-website">Website</label>
-          <input id="f-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+          <input
+            id="f-website"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+          />
         </p>
         <div class="field">
           <label for="f-name">{c.formName}</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="200" />
+          <input
+            id="f-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            maxlength="200"
+          />
         </div>
         <div class="field">
           <label for="f-mail">{c.formEmail}</label>
-          <input id="f-mail" name="email" type="email" autocomplete="email" required maxlength="200" />
+          <input
+            id="f-mail"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            maxlength="200"
+          />
         </div>
         <div class="field">
           <label for="f-msg">{c.formMessage}</label>
-          <textarea id="f-msg" name="message" rows="6" required maxlength="5000"></textarea>
+          <textarea
+            id="f-msg"
+            name="message"
+            rows="6"
+            required
+            maxlength="5000"
+          ></textarea>
         </div>
-        <button type="submit" class="submit-btn" data-sending-label={c.formSending}>
+        <button
+          type="submit"
+          class="submit-btn"
+          data-sending-label={c.formSending}
+        >
           {c.formSubmit}
         </button>
         <p class="muted form-note">{c.formNote}</p>
       </form>
 
-      <div class="ink-panel a11y-statement">
+      <div id="accessibility" class="ink-panel a11y-statement">
         <h2>{c.a11yTitle}</h2>
         <p>{c.a11yP1}</p>
         <p>{c.a11yP2}</p>
@@ -117,7 +156,7 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   .contact-col > h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 30px;
+    font-size: 1.875rem;
     letter-spacing: -0.02em;
   }
 
@@ -138,7 +177,7 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .info-label {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -146,14 +185,14 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .info-value {
-    font-size: 21px;
+    font-size: 1.3125rem;
     line-height: 1.5;
   }
 
   .info-phone {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 24px;
+    font-size: 1.5rem;
     text-decoration: none;
     color: inherit;
     border-bottom: 3px solid var(--accent);
@@ -161,7 +200,7 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .info-mail {
-    font-size: 21px;
+    font-size: 1.3125rem;
     align-self: flex-start;
   }
 
@@ -178,7 +217,7 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .map-link {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
 
   .contact-form {
@@ -204,14 +243,14 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .field label {
-    font-size: 17px;
+    font-size: 1.0625rem;
     font-weight: 700;
   }
 
   .field input,
   .field textarea {
     padding: 16px;
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-family: inherit;
     color: inherit;
     border: var(--border);
@@ -228,9 +267,9 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
     background: var(--ink);
     color: var(--bg);
     border: var(--border);
-    border-radius: 999px;
+    border-radius: 9px;
     font-weight: 800;
-    font-size: 19px;
+    font-size: 1.1875rem;
     cursor: pointer;
   }
 
@@ -240,7 +279,7 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   }
 
   .form-note {
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.55;
   }
 
@@ -255,18 +294,36 @@ const mapQuery = encodeURIComponent('ул. Пейо Яворов 2, 4400 Паз�
   .a11y-statement h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 26px;
+    font-size: 1.625rem;
     letter-spacing: -0.02em;
   }
 
   .a11y-statement p {
-    font-size: 19px;
+    font-size: 1.1875rem;
     line-height: 1.6;
   }
 
   @media (max-width: 1100px) {
     .contact-grid {
       grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .contact-grid {
+      padding-inline: 20px;
+    }
+    .contact-form,
+    .a11y-statement,
+    .info-row {
+      padding: 24px;
+    }
+    .info-mail {
+      overflow-wrap: anywhere;
+    }
+    .field input,
+    .field textarea {
+      min-width: 0;
+      width: 100%;
     }
   }
 </style>

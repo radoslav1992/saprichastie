@@ -33,7 +33,9 @@ const toc = [
   <div class="rail">
     <nav aria-label={a.onThisPage} class="rail__nav" data-noprint>
       <span class="rail__nav-label">{a.onThisPage}</span>
-      {toc.map((item) => <a href={item.href}>{item.label}</a>)}
+      {toc.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
     </nav>
 
     <div class="rail__content activities-content">
@@ -42,7 +44,9 @@ const toc = [
         <p class="block__text">{a.workshops.text}</p>
         <h3 class="list-title">{a.workshops.listTitle}</h3>
         <ul class="dash-list dash-list--grid dash-list--tight">
-          {a.workshops.list.map((item) => <li>{item}</li>)}
+          {a.workshops.list.map((item) => (
+            <li>{item}</li>
+          ))}
         </ul>
         <p class="block__text block__outro">{a.workshops.outro}</p>
         <ReadButton lang={lang} />
@@ -53,7 +57,9 @@ const toc = [
         <p class="block__text">{a.events.text}</p>
         <h3 class="list-title">{a.events.listTitle}</h3>
         <ul class="dash-list dash-list--grid">
-          {a.events.list.map((item) => <li>{item}</li>)}
+          {a.events.list.map((item) => (
+            <li>{item}</li>
+          ))}
         </ul>
         <p class="block__text block__outro">{a.events.outro}</p>
         <ReadButton lang={lang} />
@@ -65,7 +71,9 @@ const toc = [
           <p class="block__text">{a.outdoors.text}</p>
           <h3 class="list-title">{a.outdoors.listTitle}</h3>
           <ul class="dash-list">
-            {a.outdoors.list.map((item) => <li>{item}</li>)}
+            {a.outdoors.list.map((item) => (
+              <li>{item}</li>
+            ))}
           </ul>
           <p class="block__text block__outro">{a.outdoors.outro}</p>
         </div>
@@ -84,7 +92,10 @@ const toc = [
         <h2>{a.upcoming.title}</h2>
         <p class="block__text">{a.upcoming.p1}</p>
         <p class="block__text">{a.upcoming.p2}</p>
-        <a href={localizePath(lang, '/contact')} class="btn btn--sm btn--accent btn--accent-on-ink upcoming__cta">
+        <a
+          href={localizePath(lang, '/contact')}
+          class="btn btn--sm btn--accent btn--accent-on-ink upcoming__cta"
+        >
           {a.upcoming.cta}
         </a>
         <ReadButton lang={lang} />
@@ -111,12 +122,12 @@ const toc = [
   .upcoming h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 32px;
+    font-size: 2rem;
     letter-spacing: -0.02em;
   }
 
   .block__text {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.6;
     max-width: 66ch;
   }
@@ -126,13 +137,13 @@ const toc = [
   }
 
   .list-title {
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-weight: 800;
     margin-top: 6px;
   }
 
   .dash-list--tight {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   }
 
   .outdoor-split {

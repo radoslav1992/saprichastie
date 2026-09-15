@@ -2,7 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import ReadButton from '../ReadButton.astro';
 import { type Lang, useTranslations, localizePath } from '../../i18n';
-import { archiveBase, formatDuration, trackUrl, type ArchiveItem } from '../../lib/archive';
+import {
+  archiveBase,
+  formatDuration,
+  trackUrl,
+  type ArchiveItem,
+} from '../../lib/archive';
 
 interface Props {
   lang: Lang;
@@ -17,9 +22,14 @@ const l = t.library;
 
 const env = Astro.locals.runtime?.env;
 const archiveUrl = item ? `https://archive.org/details/${item.identifier}` : '';
-const coverUrl = item ? `${archiveBase(env)}/services/img/${item.identifier}` : '';
+const coverUrl = item
+  ? `${archiveBase(env)}/services/img/${item.identifier}`
+  : '';
 const tracks = item?.tracks ?? [];
-const totalSeconds = tracks.reduce((sum, track) => sum + (track.seconds ?? 0), 0);
+const totalSeconds = tracks.reduce(
+  (sum, track) => sum + (track.seconds ?? 0),
+  0,
+);
 
 const isoDuration = (s: number) =>
   `PT${Math.floor(s / 3600)}H${Math.floor((s % 3600) / 60)}M${s % 60}S`;
@@ -28,13 +38,18 @@ const bookLd = item
       {
         '@type': 'Audiobook',
         name: item.title,
-        ...(item.creator ? { author: { '@type': 'Person', name: item.creator } } : {}),
+        ...(item.creator
+          ? { author: { '@type': 'Person', name: item.creator } }
+          : {}),
         inLanguage: 'bg',
         readBy: { '@type': 'Organization', name: 'LibriVox' },
         ...(item.description ? { description: item.description } : {}),
         ...(totalSeconds > 0 ? { duration: isoDuration(totalSeconds) } : {}),
         image: coverUrl,
-        url: new URL(localizePath(lang, `/library/${item.identifier}`), Astro.site).href,
+        url: new URL(
+          localizePath(lang, `/library/${item.identifier}`),
+          Astro.site,
+        ).href,
         sameAs: archiveUrl,
         isAccessibleForFree: true,
       },
@@ -57,117 +72,145 @@ const bookLd = item
       </p>
       <span class="eyebrow">{l.eyebrow}</span>
       <h1 class="book-title">{item ? item.title : l.notFound}</h1>
-      {
-        item && (item.creator || item.year) && (
-          <p class="book-meta">
-            {item.creator && (
-              <span>
-                {l.author}: <strong>{item.creator}</strong>
-              </span>
-            )}
-            {item.year && (
-              <span class="muted">
-                {l.yearWord}: {item.year}
-              </span>
-            )}
-          </p>
-        )
-      }
+      {item && (item.creator || item.year) && (
+        <p class="book-meta">
+          {item.creator && (
+            <span>
+              {l.author}: <strong>{item.creator}</strong>
+            </span>
+          )}
+          {item.year && (
+            <span class="muted">
+              {l.yearWord}: {item.year}
+            </span>
+          )}
+        </p>
+      )}
     </div>
   </div>
 
-  {
-    item && tracks.length > 0 && (
-      <section class="container book">
-        <p class="book__hint">{l.listen}</p>
-        <div
-          class="card player"
-          role="group"
-          aria-label={l.playerLabel}
-          data-book-title={item.title}
-          data-book-author={item.creator ?? ''}
-          data-cover={coverUrl}
-        >
-          <div class="player__top">
-            <img class="player__cover" src={coverUrl} alt="" width="112" height="112" loading="lazy" />
-            <div class="player__main">
-              <p class="player__now">
-                {l.nowPlaying}
-                <strong id="np-title" aria-live="polite">{tracks[0].title}</strong>
-              </p>
-              <audio id="book-audio" controls preload="metadata" src={trackUrl(env, item.identifier, tracks[0].name)} />
-              <div class="player__nav" data-noprint>
-                <button type="button" id="prev-track" class="player__navbtn" disabled>
-                  ⏮ {l.prevChapter}
-                </button>
-                <button type="button" id="next-track" class="player__navbtn" disabled={tracks.length < 2}>
-                  {l.nextChapter} ⏭
-                </button>
-              </div>
+  {item && tracks.length > 0 && (
+    <section class="container book">
+      <p class="book__hint">{l.listen}</p>
+      <div
+        class="card player"
+        role="group"
+        aria-label={l.playerLabel}
+        data-book-title={item.title}
+        data-book-author={item.creator ?? ''}
+        data-cover={coverUrl}
+      >
+        <div class="player__top">
+          <img
+            class="player__cover"
+            src={coverUrl}
+            alt=""
+            width="112"
+            height="112"
+            loading="lazy"
+          />
+          <div class="player__main">
+            <p class="player__now">
+              {l.nowPlaying}
+              <strong id="np-title" aria-live="polite">
+                {tracks[0].title}
+              </strong>
+            </p>
+            <audio
+              id="book-audio"
+              controls
+              preload="metadata"
+              src={trackUrl(env, item.identifier, tracks[0].name)}
+            />
+            <div class="player__nav" data-noprint>
+              <button
+                type="button"
+                id="prev-track"
+                class="player__navbtn"
+                disabled
+              >
+                ⏮ {l.prevChapter}
+              </button>
+              <button
+                type="button"
+                id="next-track"
+                class="player__navbtn"
+                disabled={tracks.length < 2}
+              >
+                {l.nextChapter} ⏭
+              </button>
             </div>
           </div>
-
-          <div class="player__list">
-            <h2 class="player__chapters-title">
-              {l.chapters} ({tracks.length})
-              {totalSeconds > 0 && (
-                <span class="muted player__total">
-                  · {l.totalDuration} {formatDuration(totalSeconds)}
-                </span>
-              )}
-            </h2>
-            <ol class="tracks">
-              {tracks.map((track, i) => (
-                <li>
-                  <a
-                    href={trackUrl(env, item.identifier, track.name)}
-                    class="track"
-                    data-track={i}
-                    aria-current={i === 0 ? 'true' : undefined}
-                  >
-                    <span class="track__num" aria-hidden="true">{i + 1}</span>
-                    <span class="track__title">{track.title}</span>
-                    {track.seconds != null && <span class="track__time muted">{formatDuration(track.seconds)}</span>}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </div>
         </div>
-        <p class="book__external">
-          <a href={archiveUrl} rel="noopener">{l.openOnArchive} ↗</a>
-        </p>
 
-        {item.description && (
-          <div class="book__about" data-read>
-            <h2>{l.aboutBook}</h2>
-            <p>{item.description}</p>
-            <ReadButton lang={lang} />
-          </div>
-        )}
-      </section>
-    )
-  }
-  {
-    item && tracks.length === 0 && (
-      <section class="container book">
-        <p class="notice card">{l.noAudio}</p>
-        <p class="book__external">
-          <a href={archiveUrl} rel="noopener" class="btn btn--solid">{l.openOnArchive} ↗</a>
-        </p>
-      </section>
-    )
-  }
-  {
-    !item && (
-      <section class="container book">
-        <p class="notice card">{l.notFound}</p>
-        <p class="book__external">
-          <a href={localizePath(lang, '/library')} class="btn btn--solid">{l.back}</a>
-        </p>
-      </section>
-    )
-  }
+        <div class="player__list">
+          <h2 class="player__chapters-title">
+            {l.chapters} ({tracks.length})
+            {totalSeconds > 0 && (
+              <span class="muted player__total">
+                · {l.totalDuration} {formatDuration(totalSeconds)}
+              </span>
+            )}
+          </h2>
+          <ol class="tracks">
+            {tracks.map((track, i) => (
+              <li>
+                <a
+                  href={trackUrl(env, item.identifier, track.name)}
+                  class="track"
+                  data-track={i}
+                  aria-current={i === 0 ? 'true' : undefined}
+                >
+                  <span class="track__num" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span class="track__title">{track.title}</span>
+                  {track.seconds != null && (
+                    <span class="track__time muted">
+                      {formatDuration(track.seconds)}
+                    </span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+      <p class="book__external">
+        <a href={archiveUrl} rel="noopener">
+          {l.openOnArchive} ↗
+        </a>
+      </p>
+
+      {item.description && (
+        <div class="book__about" data-read>
+          <h2>{l.aboutBook}</h2>
+          <p>{item.description}</p>
+          <ReadButton lang={lang} />
+        </div>
+      )}
+    </section>
+  )}
+  {item && tracks.length === 0 && (
+    <section class="container book">
+      <p class="notice card">{l.noAudio}</p>
+      <p class="book__external">
+        <a href={archiveUrl} rel="noopener" class="btn btn--solid">
+          {l.openOnArchive} ↗
+        </a>
+      </p>
+    </section>
+  )}
+  {!item && (
+    <section class="container book">
+      <p class="notice card">{l.notFound}</p>
+      <p class="book__external">
+        <a href={localizePath(lang, '/library')} class="btn btn--solid">
+          {l.back}
+        </a>
+      </p>
+    </section>
+  )}
 </Base>
 
 <script>
@@ -177,14 +220,20 @@ const bookLd = item
    * lock-screen (Media Session) controls stay in sync. Without JS every
    * chapter link simply opens its MP3 directly.
    */
-  const audio = document.getElementById('book-audio') as HTMLAudioElement | null;
+  const audio = document.getElementById(
+    'book-audio',
+  ) as HTMLAudioElement | null;
   const player = document.querySelector<HTMLElement>('.player');
 
   if (audio && player) {
     const tracks = [...document.querySelectorAll<HTMLAnchorElement>('.track')];
     const npTitle = document.getElementById('np-title');
-    const prevBtn = document.getElementById('prev-track') as HTMLButtonElement | null;
-    const nextBtn = document.getElementById('next-track') as HTMLButtonElement | null;
+    const prevBtn = document.getElementById(
+      'prev-track',
+    ) as HTMLButtonElement | null;
+    const nextBtn = document.getElementById(
+      'next-track',
+    ) as HTMLButtonElement | null;
     let current = 0;
 
     const trackTitle = (i: number) =>
@@ -216,7 +265,7 @@ const bookLd = item
       a.addEventListener('click', (e) => {
         e.preventDefault();
         select(i, true);
-      })
+      }),
     );
     prevBtn?.addEventListener('click', () => select(current - 1, true));
     nextBtn?.addEventListener('click', () => select(current + 1, true));
@@ -225,8 +274,12 @@ const bookLd = item
     });
 
     if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler('previoustrack', () => select(current - 1, true));
-      navigator.mediaSession.setActionHandler('nexttrack', () => select(current + 1, true));
+      navigator.mediaSession.setActionHandler('previoustrack', () =>
+        select(current - 1, true),
+      );
+      navigator.mediaSession.setActionHandler('nexttrack', () =>
+        select(current + 1, true),
+      );
       select(0, false);
     }
   }
@@ -234,7 +287,7 @@ const bookLd = item
 
 <style>
   .book-head__back {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
 
   .book-head__back a {
@@ -247,7 +300,7 @@ const bookLd = item
   }
 
   .book-meta {
-    font-size: 19px;
+    font-size: 1.1875rem;
     display: flex;
     gap: 22px;
     flex-wrap: wrap;
@@ -259,7 +312,7 @@ const bookLd = item
   }
 
   .book__hint {
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-weight: 700;
     margin-bottom: 14px;
   }
@@ -290,14 +343,14 @@ const bookLd = item
 
   .player__main {
     flex: 1;
-    min-width: 260px;
+    min-width: min(100%, 260px);
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
   .player__now {
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
   .player__now strong {
@@ -318,9 +371,9 @@ const bookLd = item
     padding: 10px 20px;
     background: none;
     border: var(--border);
-    border-radius: 999px;
+    border-radius: 9px;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 0.9375rem;
     cursor: pointer;
   }
 
@@ -340,7 +393,7 @@ const bookLd = item
   .player__chapters-title {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 22px;
+    font-size: 1.375rem;
     letter-spacing: -0.02em;
     margin-bottom: 14px;
   }
@@ -348,7 +401,7 @@ const bookLd = item
   .player__total {
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 1rem;
     letter-spacing: 0;
   }
 
@@ -366,7 +419,7 @@ const bookLd = item
     border-bottom: 2px solid var(--border-soft);
     text-decoration: none;
     color: inherit;
-    font-size: 18px;
+    font-size: 1.125rem;
     border-radius: 8px;
   }
 
@@ -383,7 +436,7 @@ const bookLd = item
   .track__num {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.875rem;
     min-width: 26px;
   }
 
@@ -394,12 +447,12 @@ const bookLd = item
 
   .track__time {
     font-variant-numeric: tabular-nums;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .book__external {
     margin-top: 16px;
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
   .book__about {
@@ -413,18 +466,18 @@ const bookLd = item
   .book__about h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 26px;
+    font-size: 1.625rem;
     letter-spacing: -0.02em;
   }
 
   .book__about p {
-    font-size: 19px;
+    font-size: 1.1875rem;
     line-height: 1.65;
   }
 
   .notice {
     padding: 26px 30px;
-    font-size: 19px;
+    font-size: 1.1875rem;
     max-width: 62ch;
     margin-bottom: 20px;
   }

@@ -8,7 +8,10 @@ const doc = document.documentElement;
 
 function loadSettings() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    return saved && typeof saved === 'object' && !Array.isArray(saved)
+      ? saved
+      : {};
   } catch {
     return {};
   }
@@ -35,6 +38,7 @@ if (toggle && panel) {
     const open = panel.hidden;
     panel.hidden = !open;
     toggle.setAttribute('aria-expanded', String(open));
+    if (open) panel.querySelector('button')?.focus();
   });
 
   document.addEventListener('keydown', (e) => {
@@ -46,25 +50,38 @@ if (toggle && panel) {
   });
 }
 
+document.querySelector('[data-a11y-close]')?.addEventListener('click', () => {
+  if (panel && toggle) {
+    panel.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.focus();
+  }
+});
+
 /* ---------------------------------------------------------------- */
 /*  Display preferences                                              */
 /* ---------------------------------------------------------------- */
 function reflectPressed() {
-  document.querySelectorAll('[data-fs]').forEach((b) => {
-    const active = (doc.getAttribute('data-fs') || '100') === b.getAttribute('data-fs');
+  document.querySelectorAll('button[data-fs]').forEach((b) => {
+    const active =
+      (doc.getAttribute('data-fs') || '100') === b.getAttribute('data-fs');
     b.setAttribute('aria-pressed', String(active));
   });
-  document.querySelectorAll('[data-hc]').forEach((b) => {
-    const active = (doc.getAttribute('data-hc') || 'off') === b.getAttribute('data-hc');
+  document.querySelectorAll('button[data-hc]').forEach((b) => {
+    const active =
+      (doc.getAttribute('data-hc') || 'off') === b.getAttribute('data-hc');
     b.setAttribute('aria-pressed', String(active));
   });
   document.querySelectorAll('[data-toggle]').forEach((b) => {
     const key = b.getAttribute('data-toggle');
-    b.setAttribute('aria-pressed', String(doc.getAttribute(`data-${key}`) === '1'));
+    b.setAttribute(
+      'aria-pressed',
+      String(doc.getAttribute(`data-${key}`) === '1'),
+    );
   });
 }
 
-document.querySelectorAll('[data-fs]').forEach((btn) => {
+document.querySelectorAll('button[data-fs]').forEach((btn) => {
   btn.addEventListener('click', () => {
     const value = btn.getAttribute('data-fs');
     doc.setAttribute('data-fs', value);
@@ -74,7 +91,7 @@ document.querySelectorAll('[data-fs]').forEach((btn) => {
   });
 });
 
-document.querySelectorAll('[data-hc]').forEach((btn) => {
+document.querySelectorAll('button[data-hc]').forEach((btn) => {
   btn.addEventListener('click', () => {
     const value = btn.getAttribute('data-hc');
     if (value === 'dark') {
@@ -108,6 +125,16 @@ document.querySelectorAll('[data-toggle]').forEach((btn) => {
 
 reflectPressed();
 
+document.querySelector('[data-reset]')?.addEventListener('click', () => {
+  ['fs', 'hc', 'space', 'links'].forEach((key) => {
+    doc.removeAttribute(`data-${key}`);
+    delete settings[key];
+  });
+  saveSettings(settings);
+  reflectPressed();
+  stopReading();
+});
+
 /* ---------------------------------------------------------------- */
 /*  Read aloud                                                       */
 /* ---------------------------------------------------------------- */
@@ -123,12 +150,26 @@ function stopReading() {
 function sectionText(section) {
   const clone = section.cloneNode(true);
   clone
-    .querySelectorAll('.read-btn, [aria-hidden="true"], img, button, input, textarea, iframe')
+    .querySelectorAll(
+      '.read-btn, [aria-hidden="true"], img, button, input, textarea, iframe',
+    )
     .forEach((n) => n.remove());
-  return (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim();
+  return (clone.innerText || clone.textContent || '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 document.querySelectorAll('.read-btn').forEach((btn) => {
+  btn.hidden = !synth;
+  const title = btn
+    .closest('[data-read]')
+    ?.querySelector('h1, h2, h3, [data-caption]')
+    ?.textContent?.trim();
+  if (title)
+    btn.setAttribute(
+      'aria-label',
+      `${btn.getAttribute('aria-label')}: ${title}`,
+    );
   btn.addEventListener('click', () => {
     if (!synth) return;
     const wasPlaying = btn.getAttribute('aria-pressed') === 'true';
@@ -136,6 +177,7 @@ document.querySelectorAll('.read-btn').forEach((btn) => {
     if (wasPlaying) return;
 
     const section = btn.closest('[data-read]');
+    if (!section) return;
     const text = sectionText(section);
     if (!text) return;
 
@@ -155,7 +197,10 @@ document.querySelectorAll('.read-btn').forEach((btn) => {
 });
 
 const stopBtn = document.querySelector('[data-stop]');
-if (stopBtn) stopBtn.addEventListener('click', stopReading);
+if (stopBtn) {
+  stopBtn.disabled = !synth;
+  stopBtn.addEventListener('click', stopReading);
+}
 
 window.addEventListener('pagehide', stopReading);
 
